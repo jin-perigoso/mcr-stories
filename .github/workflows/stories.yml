@@ -1,0 +1,70 @@
+name: Stories MCR
+
+# Horários em UTC (Brasília = UTC-3). Cada horário roda duas vezes: no minuto certo
+# e 20 min depois, como reforço caso o GitHub atrase ou pule a primeira execução.
+# O registro impede publicação dobrada. Ao mudar config.json > horarios, ajuste aqui.
+on:
+  schedule:
+    # Só dias úteis (seg a sex). Feriados da B3 ficam em config.json > feriados.
+    - cron: '45 10 * * 1-5'        # 07:45 Brasília  calendário econômico
+    - cron: '5,45 11 * * 1-5'      # 08:05 reforço  /  08:45 o que acompanhar hoje
+    - cron: '5 12 * * 1-5'         # 09:05 reforço
+    - cron: '0,20 16 * * 1-5'      # 13:00 parcial  /  13:20 reforço
+    - cron: '30,40,50 21 * * 1-5'  # 18:30 altas  /  18:40 baixas  /  18:50 reforço
+    - cron: '0,20 22 * * 1-5'      # 19:00 fechamento  /  19:20 reforço
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: 'Forçar um Story (1 a 6). Vazio = publica os horários vencidos de hoje'
+        required: false
+      previa:
+        description: 'Só gerar os 6 Stories de agora, sem publicar (baixe em Artifacts)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: stories
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Publicar
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          CLOUDINARY_CLOUD: ${{ secrets.CLOUDINARY_CLOUD }}
+          CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
+          CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECRET }}
+        run: |
+          if [ "${{ github.event.inputs.previa }}" = "true" ]; then
+            node gerar.js todos
+          elif [ -n "${{ github.event.inputs.slot }}" ]; then
+            node publicar.js slot "${{ github.event.inputs.slot }}"
+          else
+            node publicar.js agora
+          fi
+      - name: Guardar as imagens geradas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stories-${{ github.run_id }}
+          path: gerados/
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Salvar registro
+        if: always() && github.event.inputs.previa != 'true'
+        run: |
+          git config user.name "stories-bot"
+          git config user.email "stories-bot@users.noreply.github.com"
+          git add registro dados-base
+          git diff --cached --quiet || (git commit -m "registro: stories publicados" && git push)

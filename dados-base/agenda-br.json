@@ -1,0 +1,6 @@
+{
+  "_como_usar": "Eventos de 3 estrelas do Brasil, que o feed do Forex Factory não cobre. Atualizar toda semana (Copom, IPCA, PIB, Caged...). hora em Brasília; anterior e projecao são opcionais.",
+  "eventos": [
+    { "data": "2026-11-04", "hora": "18:30", "nome": "Copom decide a Selic", "desc": "A decisão sobre os juros sai depois do fechamento da bolsa.", "fonte": "Banco Central" }
+  ]
+}

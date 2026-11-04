@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Story MCR</title>
+<style>
+  @font-face { font-family: 'Raleway'; src: url('fonts/Raleway-latin.woff2') format('woff2'); font-weight: 100 900;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Raleway'; src: url('fonts/Raleway-latin-ext.woff2') format('woff2'); font-weight: 100 900;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C4, U+2C60-2C7F, U+A720-A7FF; }
+
+  /* paleta do mcrupinvest.com.br */
+  :root {
+    --chao: #03172c;
+    --faixa: #052344;
+    --campo: #0b325c;
+    --tinta: #ffffff;
+    --nota: #9fb3c8;
+    --laranja: #f46a25;
+    --alta: #3ddc84;
+    --baixa: #ff5c5c;
+    --m: 80px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; }
+  body {
+    background: var(--chao); color: var(--tinta);
+    font-family: 'Raleway', sans-serif; font-weight: 500;
+    font-feature-settings: 'lnum' 1, 'tnum' 1;
+    -webkit-font-smoothing: antialiased;
+  }
+  b, strong { font-weight: 700; }
+  /* fundo fixo por Story: quem acompanha reconhece o momento do dia antes de ler */
+  body.f1 { /* agenda: amanhecer, brilho laranja subindo do pé */
+    background:
+      radial-gradient(1500px 900px at 50% 108%, rgba(244, 106, 37, .5), transparent 68%),
+      linear-gradient(180deg, #010e1d 0%, #03172c 48%, #0b325c 100%); }
+  body.f2 { /* o que acompanhar: listras diagonais do site */
+    background:
+      radial-gradient(1000px 900px at 105% -8%, rgba(14, 66, 122, .75), transparent 65%),
+      repeating-linear-gradient(115deg, rgba(255, 255, 255, .03) 0 2px, transparent 2px 44px),
+      linear-gradient(165deg, #052344 0%, #03172c 55%, #010e1d 100%); }
+  body.f3 { /* parcial: meio do dia, luz azul vindo de cima */
+    background:
+      radial-gradient(1400px 1000px at 50% -14%, rgba(14, 66, 122, .95), transparent 68%),
+      radial-gradient(700px 520px at -8% 62%, rgba(244, 106, 37, .12), transparent 70%),
+      linear-gradient(180deg, #0b325c 0%, #03172c 60%, #010e1d 100%); }
+  body.f45 { /* altas e baixas: o "up" da marca ao fundo */
+    background:
+      radial-gradient(900px 700px at 0% 0%, rgba(14, 66, 122, .55), transparent 70%),
+      linear-gradient(180deg, #03172c 0%, #010e1d 100%); }
+  body.f6 { /* fechamento: anoitecer, último brilho laranja no alto */
+    background:
+      radial-gradient(1300px 1000px at 100% -4%, rgba(244, 106, 37, .5), transparent 64%),
+      radial-gradient(900px 700px at -10% 30%, rgba(14, 66, 122, .45), transparent 70%),
+      linear-gradient(180deg, #052344 0%, #03172c 45%, #010e1d 100%); }
+  .marca-up { position: absolute; right: -330px; bottom: -40px; width: 1300px; opacity: .06; pointer-events: none; }
+  .story { z-index: 1; }
+
+
+  /* topo seguro: nada acima de y=250; base livre de 250 px para a barra de resposta */
+  .story { position: absolute; inset: 0; padding-top: 250px; }
+  .marca { display: flex; align-items: center; justify-content: space-between; padding: 0 var(--m); }
+  .logos { display: flex; align-items: center; gap: 34px; }
+  .logos .mcr { height: 66px; }
+  .logos .eqi { height: 50px; opacity: .9; }
+  .momento { font-size: 30px; font-weight: 700; color: var(--laranja); }
+
+  h1 { margin: 92px var(--m) 0; font-size: 132px; font-weight: 800; line-height: .92; letter-spacing: -0.035em; }
+  h1.longo { font-size: 112px; }
+  .apoio { margin: 40px var(--m) 0; font-size: 38px; line-height: 1.3; max-width: 900px; }
+
+  .tabela { margin-top: 64px; }
+  .tabela > div:nth-child(odd) { background: rgba(11, 50, 92, .38); }
+
+  /* ativos: parcial e fechamento */
+  .ativo { display: flex; justify-content: space-between; align-items: center; height: 116px; padding: 0 var(--m); }
+  .ativo .nome { font-size: 44px; font-weight: 700; }
+  .ativo .cod { margin-top: 4px; font-size: 26px; color: var(--nota); }
+  .ativo .dir { text-align: right; }
+  .ativo .preco { font-size: 42px; font-weight: 700; }
+  .var { font-size: 34px; font-weight: 700; }
+  .var.alta { color: var(--alta); }
+  .var.baixa { color: var(--baixa); }
+  .var.neutra { color: var(--nota); font-weight: 500; }
+
+  /* ranking: a faixa de cor atrás da linha é o tamanho do movimento */
+  .tabela.rk > div { background: none; }
+  .rank { position: relative; display: flex; justify-content: space-between; align-items: center; height: 120px; padding: 0 var(--m); }
+  .rank + .rank { margin-top: 6px; }
+  .rank .barra { position: absolute; left: var(--m); bottom: 0; height: 5px; border-radius: 3px; opacity: .6; }
+  .rank > div:not(.barra) { position: relative; }
+  .rank .tk { font-size: 58px; font-weight: 800; letter-spacing: -0.02em; }
+  .rank .emp { font-size: 28px; color: var(--nota); }
+  .rank .dir { text-align: right; }
+  .rank .var { font-size: 58px; font-weight: 800; letter-spacing: -0.02em; }
+  .rank .preco { font-size: 28px; color: var(--nota); }
+  .placar { display: flex; gap: 120px; margin-top: 44px; padding: 0 var(--m); }
+  .placar .rot { font-size: 28px; color: var(--nota); }
+  .placar .val { margin-top: 4px; font-size: 46px; font-weight: 800; }
+  .placar .var { font-size: 30px; }
+
+  /* agenda */
+  .evento { display: grid; grid-template-columns: 250px 1fr; padding: 40px var(--m); }
+  .evento .hora { font-size: 64px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+  .evento .hora.texto { font-size: 42px; padding-top: 10px; }
+  .evento .nome { font-size: 42px; font-weight: 700; line-height: 1.15; }
+  .evento .meta { margin-top: 12px; font-size: 28px; color: var(--nota); }
+  .evento .meta .estrelas { color: var(--laranja); letter-spacing: 3px; margin-right: 12px; }
+  .evento .cons { margin-top: 10px; font-size: 30px; }
+  .semana { margin: 64px var(--m) 0; }
+  .semana h2 { font-size: 36px; font-weight: 800; }
+  .semana p { margin-top: 18px; font-size: 32px; line-height: 1.3; }
+  .semana p b { display: inline-block; width: 250px; }
+
+  /* o que acompanhar */
+  .pontos { margin: 56px var(--m) 0; }
+  .ponto + .ponto { margin-top: 38px; }
+  .ponto h2 { font-size: 42px; font-weight: 800; letter-spacing: -0.01em; }
+  .ponto p { margin-top: 8px; font-size: 30px; line-height: 1.36; color: #dbe5ef; }
+
+  .nota-dado { margin: 28px var(--m) 0; font-size: 24px; line-height: 1.4; color: var(--nota); }
+
+  footer { position: absolute; left: var(--m); right: var(--m); bottom: 250px; font-size: 22px; line-height: 1.45; color: var(--nota); }
+</style>
+</head>
+<body>
+<img class="marca-up" id="marcaUp" src="marca-up.png" alt="" hidden>
+<div class="story" id="story"></div>
+<script src="dados.js"></script>
+<script>
+  const D = window.DADOS;
+  const n = Number(new URLSearchParams(location.search).get('n') || 1);
+  const br = (v, casas = 2) => v.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas });
+  const casasDe = (v) => (v >= 10000 ? 0 : 2);
+  const sinal = (v) => (v > 0 ? '+' : v < 0 ? '−' : '');
+  const variacao = (v) => {
+    if (v === null || v === undefined) return '<div class="var neutra">sem negociação</div>';
+    const classe = v > 0 ? 'alta' : v < 0 ? 'baixa' : 'neutra';
+    const seta = v > 0 ? '▲ ' : v < 0 ? '▼ ' : '';
+    return `<div class="var ${classe}">${seta}${sinal(v)}${br(Math.abs(v))}%</div>`;
+  };
+
+  function moldura({ momento, titulo, longo, apoio, corpo, fonte }) {
+    return `
+      <div class="marca">
+        <div class="logos"><img class="mcr" src="logo-mcrup-site.png" alt="MCR Up Invest"><img class="eqi" src="logo-eqi.png" alt="EQI Investimentos"></div>
+        <div class="momento">${momento}</div>
+      </div>
+      <h1 class="${longo ? 'longo' : ''}">${titulo}</h1>
+      ${apoio ? `<p class="apoio">${apoio}</p>` : ''}
+      ${corpo}
+      <footer>Fonte: ${fonte}. Conteúdo informativo, não é recomendação de investimento. MCR Up Invest, assessoria de investimentos vinculada à EQI Investimentos.</footer>`;
+  }
+
+  const ativos = (bloco) => `
+    <div class="tabela">${bloco.ativos.map((a) => `
+      <div class="ativo">
+        <div><div class="nome">${a.nome}</div><div class="cod">${a.cod}</div></div>
+        <div class="dir"><div class="preco">${a.pre || ''}${br(a.preco, casasDe(a.preco))}</div>${variacao(a.var)}</div>
+      </div>`).join('')}</div>
+    <p class="nota-dado">${bloco.nota}</p>`;
+
+  function ranking(lista, cor) {
+    if (!lista.length) lista = [];
+    const maior = Math.max(...lista.map((a) => Math.abs(a.var)));
+    const p = D.pregao;
+    return `
+      <div class="tabela rk">${lista.map((a) => `
+        <div class="rank">
+          <div class="barra" style="width:${Math.round((Math.abs(a.var) / maior) * 920)}px;background:${cor}"></div>
+          <div><div class="tk">${a.cod}</div><div class="emp">${a.nome}</div></div>
+          <div class="dir">${variacao(a.var).replace(/▲ |▼ /, '')}<div class="preco">R$ ${br(a.preco)}</div></div>
+        </div>`).join('')}</div>
+      <div class="placar">
+        <div><div class="rot">Ibovespa</div><div class="val">${br(p.ibov.pontos, 0)} pts</div>${variacao(p.ibov.var)}</div>
+        <div><div class="rot">Dólar</div><div class="val">R$ ${br(p.dolar.preco)}</div>${variacao(p.dolar.var)}</div>
+      </div>`;
+  }
+
+  const telas = {
+    1: () => {
+      const c = D.calendario;
+      return moldura({
+        momento: 'Pré-pregão', titulo: 'Agenda do dia', apoio: `${c.titulo}. ${c.apoio}`, fonte: c.fonte,
+        corpo: `
+          <div class="tabela">${c.eventos.map((e) => `
+            <div class="evento">
+              <div class="hora ${/\d/.test(e.hora) ? '' : 'texto'}">${e.hora}</div>
+              <div>
+                <div class="nome">${e.nome}</div>
+                <div class="meta"><span class="estrelas">★★★</span>${e.pais}</div>
+                ${e.anterior || e.projecao ? `<div class="cons">${[e.anterior && `Anterior ${e.anterior}`, e.projecao && `projeção ${e.projecao}`].filter(Boolean).join(', ')}</div>` : ''}
+              </div>
+            </div>`).join('')}</div>
+          ${c.radar.length ? `<div class="semana"><h2>Ainda nesta semana</h2>${c.radar.map((r) => `<p><b>${r.quando}</b>${r.nome}</p>`).join('')}</div>` : ''}`,
+      });
+    },
+    2: () => {
+      const a = D.acompanhar;
+      return moldura({
+        momento: 'Pré-pregão', titulo: 'O que acompanhar hoje', longo: true, apoio: a.titulo, fonte: a.fonte,
+        corpo: `<div class="pontos">${a.itens.map((it) => `<div class="ponto"><h2>${it.t}</h2><p>${it.d}</p></div>`).join('')}</div>`,
+      });
+    },
+    3: () => moldura({
+      momento: `Parcial, ${D.parcial.hora}`, titulo: 'Parcial', apoio: D.parcial.apoio, fonte: D.parcial.fonte, corpo: ativos(D.parcial),
+    }),
+    4: () => moldura({
+      momento: 'Pós-pregão', titulo: 'Maiores altas', apoio: D.pregao.apoioAltas, fonte: D.pregao.fonte, corpo: ranking(D.pregao.altas, 'var(--alta)'),
+    }),
+    5: () => moldura({
+      momento: 'Pós-pregão', titulo: 'Maiores baixas', apoio: D.pregao.apoioBaixas, fonte: D.pregao.fonte, corpo: ranking(D.pregao.baixas, 'var(--baixa)'),
+    }),
+    6: () => moldura({
+      momento: 'Fechamento', titulo: 'Fechamento', apoio: D.fechamento.apoio, fonte: D.fechamento.fonte, corpo: ativos(D.fechamento),
+    }),
+  };
+
+  document.body.className = n === 4 || n === 5 ? 'f45' : `f${n}`;
+  document.getElementById('marcaUp').hidden = !(n === 4 || n === 5);
+  document.getElementById('story').innerHTML = telas[n]();
+</script>
+</body>
+</html>

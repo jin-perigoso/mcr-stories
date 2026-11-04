@@ -1,0 +1,309 @@
+{
+ "atualizadoEm": 1793751984343,
+ "ativos": [
+  {
+   "cod": "ALOS3",
+   "nomeB3": "ALLOS"
+  },
+  {
+   "cod": "ABEV3",
+   "nomeB3": "AMBEV S/A"
+  },
+  {
+   "cod": "ASAI3",
+   "nomeB3": "ASSAI"
+  },
+  {
+   "cod": "AURE3",
+   "nomeB3": "AUREN"
+  },
+  {
+   "cod": "AXIA3",
+   "nomeB3": "AXIA ENERGIA"
+  },
+  {
+   "cod": "AZZA3",
+   "nomeB3": "AZZAS 2154"
+  },
+  {
+   "cod": "B3SA3",
+   "nomeB3": "B3"
+  },
+  {
+   "cod": "BBSE3",
+   "nomeB3": "BBSEGURIDADE"
+  },
+  {
+   "cod": "BBDC3",
+   "nomeB3": "BRADESCO"
+  },
+  {
+   "cod": "BBDC4",
+   "nomeB3": "BRADESCO"
+  },
+  {
+   "cod": "BRAP4",
+   "nomeB3": "BRADESPAR"
+  },
+  {
+   "cod": "BBAS3",
+   "nomeB3": "BRASIL"
+  },
+  {
+   "cod": "BRAV3",
+   "nomeB3": "BRAVA"
+  },
+  {
+   "cod": "BPAC11",
+   "nomeB3": "BTGP BANCO"
+  },
+  {
+   "cod": "CXSE3",
+   "nomeB3": "CAIXA SEGURI"
+  },
+  {
+   "cod": "CEAB3",
+   "nomeB3": "CEA MODAS"
+  },
+  {
+   "cod": "CMIG4",
+   "nomeB3": "CEMIG"
+  },
+  {
+   "cod": "COGN3",
+   "nomeB3": "COGNA ON"
+  },
+  {
+   "cod": "CSMG3",
+   "nomeB3": "COPASA"
+  },
+  {
+   "cod": "CPLE3",
+   "nomeB3": "COPEL"
+  },
+  {
+   "cod": "CSAN3",
+   "nomeB3": "COSAN"
+  },
+  {
+   "cod": "CPFE3",
+   "nomeB3": "CPFL ENERGIA"
+  },
+  {
+   "cod": "CMIN3",
+   "nomeB3": "CSNMINERACAO"
+  },
+  {
+   "cod": "CURY3",
+   "nomeB3": "CURY S/A"
+  },
+  {
+   "cod": "CYRE3",
+   "nomeB3": "CYRELA REALT"
+  },
+  {
+   "cod": "DIRR3",
+   "nomeB3": "DIRECIONAL"
+  },
+  {
+   "cod": "EMBJ3",
+   "nomeB3": "EMBRAER"
+  },
+  {
+   "cod": "ENGI11",
+   "nomeB3": "ENERGISA"
+  },
+  {
+   "cod": "ENEV3",
+   "nomeB3": "ENEVA"
+  },
+  {
+   "cod": "EGIE3",
+   "nomeB3": "ENGIE BRASIL"
+  },
+  {
+   "cod": "EQTL3",
+   "nomeB3": "EQUATORIAL"
+  },
+  {
+   "cod": "FLRY3",
+   "nomeB3": "FLEURY"
+  },
+  {
+   "cod": "GGBR4",
+   "nomeB3": "GERDAU"
+  },
+  {
+   "cod": "GOAU4",
+   "nomeB3": "GERDAU MET"
+  },
+  {
+   "cod": "HAPV3",
+   "nomeB3": "HAPVIDA"
+  },
+  {
+   "cod": "HYPE3",
+   "nomeB3": "HYPERA"
+  },
+  {
+   "cod": "IGTI11",
+   "nomeB3": "IGUATEMI S.A"
+  },
+  {
+   "cod": "ISAE4",
+   "nomeB3": "ISA ENERGIA"
+  },
+  {
+   "cod": "ITSA4",
+   "nomeB3": "ITAUSA"
+  },
+  {
+   "cod": "ITUB4",
+   "nomeB3": "ITAUUNIBANCO"
+  },
+  {
+   "cod": "KLBN11",
+   "nomeB3": "KLABIN S/A"
+  },
+  {
+   "cod": "RENT3",
+   "nomeB3": "LOCALIZA"
+  },
+  {
+   "cod": "LREN3",
+   "nomeB3": "LOJAS RENNER"
+  },
+  {
+   "cod": "MGLU3",
+   "nomeB3": "MAGAZ LUIZA"
+  },
+  {
+   "cod": "POMO4",
+   "nomeB3": "MARCOPOLO"
+  },
+  {
+   "cod": "MBRF3",
+   "nomeB3": "MARFRIG"
+  },
+  {
+   "cod": "BEEF3",
+   "nomeB3": "MINERVA"
+  },
+  {
+   "cod": "MOTV3",
+   "nomeB3": "MOTIVA SA"
+  },
+  {
+   "cod": "MRVE3",
+   "nomeB3": "MRV"
+  },
+  {
+   "cod": "MULT3",
+   "nomeB3": "MULTIPLAN"
+  },
+  {
+   "cod": "NATU3",
+   "nomeB3": "NATURA"
+  },
+  {
+   "cod": "PETR3",
+   "nomeB3": "PETROBRAS"
+  },
+  {
+   "cod": "PETR4",
+   "nomeB3": "PETROBRAS"
+  },
+  {
+   "cod": "PSSA3",
+   "nomeB3": "PORTO SEGURO"
+  },
+  {
+   "cod": "PRIO3",
+   "nomeB3": "PRIO"
+  },
+  {
+   "cod": "RADL3",
+   "nomeB3": "RAIADROGASIL"
+  },
+  {
+   "cod": "RDOR3",
+   "nomeB3": "REDE D OR"
+  },
+  {
+   "cod": "RAIL3",
+   "nomeB3": "RUMO S.A."
+  },
+  {
+   "cod": "SBSP3",
+   "nomeB3": "SABESP"
+  },
+  {
+   "cod": "SANB11",
+   "nomeB3": "SANTANDER BR"
+  },
+  {
+   "cod": "CSNA3",
+   "nomeB3": "SID NACIONAL"
+  },
+  {
+   "cod": "SMFT3",
+   "nomeB3": "SMART FIT"
+  },
+  {
+   "cod": "SUZB3",
+   "nomeB3": "SUZANO S.A."
+  },
+  {
+   "cod": "TAEE11",
+   "nomeB3": "TAESA"
+  },
+  {
+   "cod": "VIVT3",
+   "nomeB3": "TELEF BRASIL"
+  },
+  {
+   "cod": "TEND3",
+   "nomeB3": "TENDA"
+  },
+  {
+   "cod": "TIMS3",
+   "nomeB3": "TIM"
+  },
+  {
+   "cod": "TOTS3",
+   "nomeB3": "TOTVS"
+  },
+  {
+   "cod": "UGPA3",
+   "nomeB3": "ULTRAPAR"
+  },
+  {
+   "cod": "USIM5",
+   "nomeB3": "USIMINAS"
+  },
+  {
+   "cod": "VALE3",
+   "nomeB3": "VALE"
+  },
+  {
+   "cod": "VAMO3",
+   "nomeB3": "VAMOS"
+  },
+  {
+   "cod": "VBBR3",
+   "nomeB3": "VIBRA"
+  },
+  {
+   "cod": "VIVA3",
+   "nomeB3": "VIVARA S.A."
+  },
+  {
+   "cod": "WEGE3",
+   "nomeB3": "WEG"
+  },
+  {
+   "cod": "YDUQ3",
+   "nomeB3": "YDUQS PART"
+  }
+ ]
+}

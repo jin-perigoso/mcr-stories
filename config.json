@@ -1,0 +1,36 @@
+{
+  "fuso": "America/Sao_Paulo",
+  "horarios": [
+    "07:45",
+    "08:45",
+    "13:00",
+    "18:30",
+    "18:40",
+    "19:00"
+  ],
+  "pautas": [
+    "Calendário econômico 3 estrelas (pré-pregão)",
+    "O que acompanhar hoje (pré-pregão)",
+    "Parcial: OIL, S&P 500, NASDAQ, BTC, VIX, GOLD",
+    "Maiores altas (pós-pregão)",
+    "Maiores baixas (pós-pregão)",
+    "Fechamento: OIL, S&P 500, NASDAQ, BTC, VIX, GOLD"
+  ],
+  "diasUteis": true,
+  "feriados": [
+    "2026-11-20",
+    "2026-12-24",
+    "2026-12-25",
+    "2026-12-31",
+    "2027-01-01"
+  ],
+  "toleranciaMinutos": 90,
+  "graphHost": "https://graph.facebook.com",
+  "graphVersao": "v23.0",
+  "pastaCloudinary": "mcr-stories",
+  "paisesCalendario": [
+    "USD",
+    "EUR",
+    "CNY"
+  ]
+}
