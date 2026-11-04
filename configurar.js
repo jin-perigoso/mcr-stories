@@ -234,8 +234,7 @@ async function testar() {
   // pergunta lendo linha a linha: funciona no terminal e com respostas enviadas por pipe
   const rl = { question: async (q) => { process.stdout.write(q); const { value } = await linhas.next(); return value ?? ''; } };
   try {
-    console.log('
-Como vai ser a ligação com o Instagram?');
+    console.log('\nComo vai ser a ligação com o Instagram?');
     console.log('  1  token do usuário do sistema do Business Suite (recomendado, não expira)');
     console.log('  2  login pelo Instagram (sem Página; token renovado toda semana)');
     console.log('  3  token do Graph API Explorer de um admin da Página');
