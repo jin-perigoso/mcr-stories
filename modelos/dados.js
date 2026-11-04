@@ -1,4 +1,4 @@
-// gerado por gerar.js em 2026-11-04T00:28:00.758Z
+// gerado por gerar.js em 2026-11-04T00:28:31.488Z
 window.DADOS = {
  "data": "2026-11-04",
  "acompanhar": {

@@ -70,14 +70,18 @@ async function carteiraIbov() {
 }
 
 // ---------- calendário econômico (Forex Factory, semana corrente) ----------
+// O feed limita acessos repetidos (HTTP 429): a cópia vale 3 horas.
 async function calendarioSemana() {
   const cache = path.join(RAIZ, 'dados-base', 'calendario-semana.json');
+  const guardado = fs.existsSync(cache) ? JSON.parse(fs.readFileSync(cache, 'utf8')) : null;
+  const eventosGuardados = guardado && (Array.isArray(guardado) ? guardado : guardado.eventos);
+  if (guardado && !Array.isArray(guardado) && Date.now() - guardado.atualizadoEm < 3 * 3600e3) return eventosGuardados;
   try {
     const eventos = await buscar('https://nfs.faireconomy.media/ff_calendar_thisweek.json');
-    fs.writeFileSync(cache, JSON.stringify(eventos) + '\n');
+    fs.writeFileSync(cache, JSON.stringify({ atualizadoEm: Date.now(), eventos }) + '\n');
     return eventos;
   } catch (e) {
-    if (fs.existsSync(cache)) { console.warn(`aviso: calendário fora do ar, usando cópia guardada (${e.message})`); return JSON.parse(fs.readFileSync(cache, 'utf8')); }
+    if (eventosGuardados) { console.warn(`aviso: calendário fora do ar, usando cópia guardada (${e.message})`); return eventosGuardados; }
     throw e;
   }
 }
