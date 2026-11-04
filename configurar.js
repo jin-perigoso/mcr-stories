@@ -48,8 +48,20 @@ function acharGh() {
 }
 
 // ---------- Meta: token permanente da Página + conta do Instagram ----------
+function abrir(url) {
+  const cmd = process.platform === 'win32' ? ['cmd', ['/c', 'start', '', url]] : ['xdg-open', [url]];
+  spawnSync(cmd[0], cmd[1], { stdio: 'ignore' });
+}
+
 async function configurarMeta(rl) {
   passo('1/3  Meta (Facebook e Instagram)');
+  console.log('  Vou abrir no navegador: criar o app, as chaves do app e o Graph API Explorer.');
+  console.log(`  No Explorer, clique em "Gerar token de acesso" e marque: ${PERMISSOES.join(', ')}.`);
+  if ((await rl.question('  Abrir agora? [S/n] ')).trim().toLowerCase() !== 'n') {
+    abrir('https://developers.facebook.com/apps/creation/');
+    abrir('https://developers.facebook.com/apps/');
+    abrir(`https://developers.facebook.com/tools/explorer/?method=GET&path=me%2Faccounts&version=${config.graphVersao}`);
+  }
   const appId = (await rl.question('  ID do app da Meta: ')).trim();
   const appSecret = (await rl.question('  Chave secreta do app: ')).trim();
   const tokenCurto = (await rl.question('  Token do Graph API Explorer: ')).trim();
