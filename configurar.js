@@ -156,12 +156,15 @@ async function testar() {
 (async () => {
   if (process.argv.includes('--testar')) return testar();
   console.log('\nAtivação dos Stories automáticos da MCR Up Invest');
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const leitor = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const linhas = leitor[Symbol.asyncIterator]();
+  // pergunta lendo linha a linha: funciona no terminal e com respostas enviadas por pipe
+  const rl = { question: async (q) => { process.stdout.write(q); const { value } = await linhas.next(); return value ?? ''; } };
   try {
     const segredos = await configurarMeta(rl);
     const run = await configurarGitHub(rl, segredos);
     await rodarPrevia(run);
   } finally {
-    rl.close();
+    leitor.close();
   }
 })().catch((e) => parar(e.message));
