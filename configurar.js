@@ -234,6 +234,13 @@ async function testar() {
   // pergunta lendo linha a linha: funciona no terminal e com respostas enviadas por pipe
   const rl = { question: async (q) => { process.stdout.write(q); const { value } = await linhas.next(); return value ?? ''; } };
   try {
+    const salvo = lerEnv();
+    if (salvo.IG_USER_ID && salvo.IG_TOKEN && (await rl.question('\nJá existe um token salvo neste computador. Usar ele? [S/n] ')).trim().toLowerCase() !== 'n') {
+      const segredos = { IG_USER_ID: salvo.IG_USER_ID, IG_TOKEN: salvo.IG_TOKEN, ...(salvo.IG_CHAVE ? { IG_CHAVE: salvo.IG_CHAVE } : {}) };
+      const run = await configurarGitHub(rl, segredos);
+      await rodarPrevia(run);
+      return;
+    }
     console.log('\nComo vai ser a ligação com o Instagram?');
     console.log('  1  token do usuário do sistema do Business Suite (recomendado, não expira)');
     console.log('  2  login pelo Instagram (sem Página; token renovado toda semana)');
