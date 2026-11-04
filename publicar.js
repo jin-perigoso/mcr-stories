@@ -104,9 +104,21 @@ async function hospedar(arquivo, data, n, tipo) {
 }
 
 async function hospedarGitHub(arquivo, data, n) {
-  const { GITHUB_REPOSITORY, GITHUB_TOKEN } = process.env;
-  if (!GITHUB_REPOSITORY || !GITHUB_TOKEN) throw new Error('sem hospedagem: configure o Cloudinary ou rode no GitHub Actions');
   const { execFileSync } = require('child_process');
+  let { GITHUB_REPOSITORY, GITHUB_TOKEN } = process.env;
+  // fora do GitHub Actions: usa o login do GitHub CLI deste computador e o remoto "origin"
+  if (!GITHUB_TOKEN) {
+    for (const gh of ['gh', 'C:/Program Files/GitHub CLI/gh.exe']) {
+      try { GITHUB_TOKEN = execFileSync(gh, ['auth', 'token'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); break; } catch {}
+    }
+  }
+  if (!GITHUB_REPOSITORY) {
+    try {
+      const origem = execFileSync('git', ['remote', 'get-url', 'origin'], { cwd: RAIZ, encoding: 'utf8' }).trim();
+      GITHUB_REPOSITORY = origem.replace(/^.*github\.com[/:]/, '').replace(/\.git$/, '');
+    } catch {}
+  }
+  if (!GITHUB_REPOSITORY || !GITHUB_TOKEN) throw new Error('sem hospedagem: configure o Cloudinary ou entre no GitHub CLI (gh auth login)');
   const os = require('os');
   const nome = `${data}-${n}-${Date.now()}${path.extname(arquivo).toLowerCase()}`;
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'midia-'));
