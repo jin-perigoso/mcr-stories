@@ -1,26 +1,57 @@
-// gerado por gerar.js em 2026-11-04T03:36:50.000Z
+// gerado por gerar.js em 2026-11-04T15:30:18.295Z
 window.DADOS = {
  "data": "2026-11-04",
- "acompanhar": {
-  "titulo": "Quarta, 4 de novembro",
-  "itens": [
+ "parcial": {
+  "hora": "12h30",
+  "apoio": "Quarta, 4 de novembro, 12h30. O bitcoin sobe 4,11%, o maior movimento até agora.",
+  "nota": "Cotações das 12h30, com atraso de até 15 minutos.",
+  "ativos": [
    {
-    "t": "Copom decide a Selic às 18h30",
-    "d": "A decisão sobre os juros sai depois do fechamento da bolsa."
+    "nome": "Petróleo WTI",
+    "cod": "OIL",
+    "chave": "OIL",
+    "preco": 93.58,
+    "var": -2.61,
+    "pre": "US$ "
    },
    {
-    "t": "Nasdaq em alta",
-    "d": "A Nasdaq subiu 0,83% ontem, a 25.372."
+    "nome": "S&P 500",
+    "cod": "SP500",
+    "chave": "SP500",
+    "preco": 7686.74,
+    "var": 1.56
    },
    {
-    "t": "Ibovespa",
-    "d": "Fechou ontem em 165.529 pontos, queda de 1,42%. O dólar terminou a R$ 5,49."
+    "nome": "Nasdaq",
+    "cod": "NASDAQ",
+    "chave": "NASDAQ",
+    "preco": 25921.6,
+    "var": 2.17
    },
    {
-    "t": "Payroll de emprego na sexta",
-    "d": "O principal dado de emprego dos EUA pesa nas apostas sobre os juros do Fed. Sai na sexta, às 10h30."
+    "nome": "Bitcoin",
+    "cod": "BTC",
+    "chave": "BTC",
+    "preco": 80515.24,
+    "var": 4.11,
+    "pre": "US$ "
+   },
+   {
+    "nome": "VIX",
+    "cod": "Volatilidade do S&P 500",
+    "chave": "VIX",
+    "preco": 16.92,
+    "var": -18.77
+   },
+   {
+    "nome": "Ouro",
+    "cod": "GOLD",
+    "chave": "GOLD",
+    "preco": 4042.6,
+    "var": 2.59,
+    "pre": "US$ "
    }
   ],
-  "fonte": "Forex Factory, B3 e Yahoo Finance"
+  "fonte": "Yahoo Finance"
  }
 };
