@@ -77,7 +77,10 @@ async function agenda(data) {
   const unicos = [...porHorario.values()];
   const ordem = (a, b) => (a.data + (a.diaTodo ? '00' : a.hhmm)).localeCompare(b.data + (b.diaTodo ? '00' : b.hhmm));
   const hoje = unicos.filter((e) => e.data === data).sort(ordem).slice(0, 4);
-  const semana = unicos.filter((e) => e.data > data).sort((a, b) => b.peso - a.peso).slice(0, 3).sort(ordem);
+  // "ainda nesta semana": de amanhã até sábado (a agenda do Brasil tem datas de meses à frente)
+  const d = new Date(`${data}T12:00:00Z`);
+  const sabado = new Date(d.getTime() + (6 - d.getUTCDay()) * 86400e3).toISOString().slice(0, 10);
+  const semana = unicos.filter((e) => e.data > data && e.data <= sabado).sort((a, b) => b.peso - a.peso).slice(0, 3).sort(ordem);
   return { hoje, semana, usouBR: [...hoje, ...semana].some((e) => e.pais === 'BRL') };
 }
 

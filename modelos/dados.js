@@ -1,4 +1,4 @@
-// gerado por gerar.js em 2026-11-04T01:03:26.666Z
+// gerado por gerar.js em 2026-11-04T03:21:59.508Z
 window.DADOS = {
  "data": "2026-11-04",
  "calendario": {
@@ -17,14 +17,6 @@ window.DADOS = {
    {
     "quando": "Sexta, 10h30",
     "nome": "Payroll de emprego"
-   },
-   {
-    "quando": "Quinta, 9h",
-    "nome": "IPCA de outubro"
-   },
-   {
-    "quando": "Quarta, 18h30",
-    "nome": "Copom decide a Selic"
    }
   ],
   "fonte": "Forex Factory e Banco Central"

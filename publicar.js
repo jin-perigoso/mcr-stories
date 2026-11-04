@@ -4,6 +4,7 @@
 //   node publicar.js agora [--simular]        publica os horários vencidos de hoje que ainda não saíram
 //   node publicar.js slot <1-6> [data] [--simular]   força um Story específico
 //   node publicar.js verificar [data]          confere a pasta do dia sem publicar nada
+//   node publicar.js renovar                   renova já o token do Instagram (normalmente é semanal e sozinho)
 //
 // Fila manual: fila/AAAA-MM-DD/1.jpg ... 6.mp4  (o número é a posição no dia, ligada a config.horarios)
 // Sem arquivo manual, o Story é gerado na hora com dados ao vivo (gerar.js) em gerados/AAAA-MM-DD/n.jpg
@@ -144,10 +145,58 @@ async function hospedarCloudinary(arquivo, data, n, tipo) {
 }
 
 // ---------- Instagram Graph API ----------
+// Dois tipos de token: o da API do Instagram com login do Instagram (começa com "IG", sem Página
+// do Facebook, vale 60 dias e é renovado aqui toda semana) e o de Página do Facebook (começa com
+// "EA", não expira). O host certo sai do próprio token.
+const ARQ_TOKEN = path.join(RAIZ, 'registro', 'token.enc');
+const hostDoToken = (t) => (t.startsWith('IG') ? config.instagramHost : config.graphHost);
+const chaveCifra = () => crypto.createHash('sha256').update(process.env.IG_CHAVE).digest();
+
+// o token renovado fica cifrado no repositório (AES-256-GCM, chave no secret IG_CHAVE)
+function lerTokenSalvo() {
+  if (!process.env.IG_CHAVE || !fs.existsSync(ARQ_TOKEN)) return null;
+  const j = JSON.parse(fs.readFileSync(ARQ_TOKEN, 'utf8'));
+  const d = crypto.createDecipheriv('aes-256-gcm', chaveCifra(), Buffer.from(j.iv, 'base64'));
+  d.setAuthTag(Buffer.from(j.tag, 'base64'));
+  return { ...j, token: Buffer.concat([d.update(Buffer.from(j.dados, 'base64')), d.final()]).toString('utf8') };
+}
+function salvarToken(token, expiraEm) {
+  const iv = crypto.randomBytes(12);
+  const c = crypto.createCipheriv('aes-256-gcm', chaveCifra(), iv);
+  const dados = Buffer.concat([c.update(token, 'utf8'), c.final()]);
+  fs.mkdirSync(path.dirname(ARQ_TOKEN), { recursive: true });
+  fs.writeFileSync(ARQ_TOKEN, JSON.stringify({
+    renovadoEm: new Date().toISOString(), expiraEm, iv: iv.toString('base64'),
+    tag: c.getAuthTag().toString('base64'), dados: dados.toString('base64'),
+  }, null, 2) + '\n');
+}
+function tokenAtual() {
+  try { const s = lerTokenSalvo(); if (s) return s.token; } catch (e) { console.error(`aviso: token salvo ilegível (${e.message}), usando IG_TOKEN`); }
+  return process.env.IG_TOKEN || '';
+}
+
+// renova o token do Instagram uma vez por semana (ele vale 60 dias e só renova depois de 24 h)
+async function renovarToken(forcar = false) {
+  const token = tokenAtual();
+  if (!token.startsWith('IG') || !process.env.IG_CHAVE) return;
+  let salvo = null;
+  try { salvo = lerTokenSalvo(); } catch {}
+  if (!forcar && salvo && Date.now() - Date.parse(salvo.renovadoEm) < 7 * 86400e3) return;
+  try {
+    const r = await fetch(`${config.instagramHost}/refresh_access_token?${new URLSearchParams({ grant_type: 'ig_refresh_token', access_token: token })}`);
+    const j = await r.json();
+    if (j.error || !j.access_token) throw new Error(j.error?.message || `HTTP ${r.status}`);
+    salvarToken(j.access_token, new Date(Date.now() + j.expires_in * 1000).toISOString());
+    console.log(`token do Instagram renovado (vale até ${new Date(Date.now() + j.expires_in * 1000).toLocaleDateString('pt-BR')})`);
+  } catch (e) {
+    console.error(`aviso: não renovei o token do Instagram (${e.message}); tento de novo na próxima execução`);
+  }
+}
+
 async function graph(metodo, caminho, params) {
-  const { IG_TOKEN } = process.env;
-  const url = new URL(`${config.graphHost}/${config.graphVersao}/${caminho}`);
-  const corpo = new URLSearchParams({ ...params, access_token: IG_TOKEN });
+  const token = tokenAtual();
+  const url = new URL(`${hostDoToken(token)}/${config.graphVersao}/${caminho}`);
+  const corpo = new URLSearchParams({ ...params, access_token: token });
   const r = metodo === 'GET'
     ? await fetch(`${url}?${corpo}`)
     : await fetch(url, { method: 'POST', body: corpo });
@@ -157,8 +206,8 @@ async function graph(metodo, caminho, params) {
 }
 
 async function publicarStory(urlPublica, tipo) {
-  const { IG_USER_ID, IG_TOKEN } = process.env;
-  if (!IG_USER_ID || !IG_TOKEN) throw new Error('faltam IG_USER_ID e IG_TOKEN');
+  const { IG_USER_ID } = process.env;
+  if (!IG_USER_ID || !tokenAtual()) throw new Error('faltam IG_USER_ID e IG_TOKEN');
   const campo = tipo === 'video' ? 'video_url' : 'image_url';
   const { id: container } = await graph('POST', `${IG_USER_ID}/media`, { media_type: 'STORIES', [campo]: urlPublica });
   // o Instagram processa a mídia antes de liberar a publicação (vídeo pode levar alguns minutos)
@@ -212,6 +261,7 @@ function diaSemPregao(data) {
 
 async function agora(simular) {
   const { data, minutos } = agoraNoFuso();
+  if (!simular) await renovarToken();
   if (diaSemPregao(data) && !fs.existsSync(path.join(RAIZ, 'fila', data))) { console.log(`${data}: sem pregão, nada a publicar`); return; }
   // feriado ou fim de semana com pasta manual: publica só o que estiver na fila
   const horarios = horariosDoDia(data);
@@ -252,6 +302,7 @@ const posicionais = args.filter((a) => !a.startsWith('--'));
 (async () => {
   if (cmd === 'agora') await agora(simular);
   else if (cmd === 'slot') await publicarSlot(posicionais[1] || agoraNoFuso().data, Number(posicionais[0]), simular);
+  else if (cmd === 'renovar') await renovarToken(true);
   else if (cmd === 'verificar') verificar(posicionais[0] || agoraNoFuso().data);
-  else { console.log('uso: node publicar.js agora|slot <n> [data]|verificar [data] [--simular]'); process.exit(1); }
+  else { console.log('uso: node publicar.js agora|slot <n> [data]|verificar [data]|renovar [--simular]'); process.exit(1); }
 })().catch((e) => { console.error(`ERRO: ${e.message}`); process.exit(1); });

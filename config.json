@@ -20,6 +20,7 @@
   "feriados": [],
   "toleranciaMinutos": 90,
   "graphHost": "https://graph.facebook.com",
+  "instagramHost": "https://graph.instagram.com",
   "graphVersao": "v23.0",
   "pastaCloudinary": "mcr-stories",
   "paisesCalendario": [
