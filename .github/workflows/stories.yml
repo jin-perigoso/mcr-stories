@@ -45,6 +45,7 @@ jobs:
           CLOUDINARY_CLOUD: ${{ secrets.CLOUDINARY_CLOUD }}
           CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
           CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ github.event.inputs.previa }}" = "true" ]; then
             node gerar.js todos

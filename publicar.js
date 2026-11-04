@@ -14,6 +14,13 @@ const path = require('path');
 const crypto = require('crypto');
 
 const RAIZ = __dirname;
+// credenciais locais (criadas por configurar.js); no GitHub Actions elas vêm dos secrets
+if (fs.existsSync(path.join(RAIZ, '.env'))) {
+  for (const linha of fs.readFileSync(path.join(RAIZ, '.env'), 'utf8').split(/\r?\n/)) {
+    const i = linha.indexOf('=');
+    if (i > 0 && !process.env[linha.slice(0, i)]) process.env[linha.slice(0, i)] = linha.slice(i + 1);
+  }
+}
 const config = JSON.parse(fs.readFileSync(path.join(RAIZ, 'config.json'), 'utf8'));
 const EXT_IMAGEM = ['.jpg', '.jpeg'];
 const EXT_VIDEO = ['.mp4', '.mov'];
@@ -87,9 +94,41 @@ function validar(arquivo) {
 }
 
 // ---------- hospedagem pública (a API só aceita URL) ----------
+// Com Cloudinary configurado, usa o Cloudinary. Sem ele, publica a mídia no ramo "midia" do
+// próprio repositório (precisa ser público) e usa o endereço raw.githubusercontent.com.
 async function hospedar(arquivo, data, n, tipo) {
   const { CLOUDINARY_CLOUD, CLOUDINARY_KEY, CLOUDINARY_SECRET } = process.env;
-  if (!CLOUDINARY_CLOUD || !CLOUDINARY_KEY || !CLOUDINARY_SECRET) throw new Error('faltam CLOUDINARY_CLOUD, CLOUDINARY_KEY e CLOUDINARY_SECRET');
+  if (CLOUDINARY_CLOUD && CLOUDINARY_KEY && CLOUDINARY_SECRET) return hospedarCloudinary(arquivo, data, n, tipo);
+  return hospedarGitHub(arquivo, data, n);
+}
+
+async function hospedarGitHub(arquivo, data, n) {
+  const { GITHUB_REPOSITORY, GITHUB_TOKEN } = process.env;
+  if (!GITHUB_REPOSITORY || !GITHUB_TOKEN) throw new Error('sem hospedagem: configure o Cloudinary ou rode no GitHub Actions');
+  const { execFileSync } = require('child_process');
+  const os = require('os');
+  const nome = `${data}-${n}-${Date.now()}${path.extname(arquivo).toLowerCase()}`;
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'midia-'));
+  const git = (...a) => execFileSync('git', a, { cwd: tmp, stdio: 'pipe' });
+  fs.copyFileSync(arquivo, path.join(tmp, nome));
+  git('init', '-q');
+  git('-c', 'user.name=stories-bot', '-c', 'user.email=stories-bot@users.noreply.github.com', 'add', nome);
+  git('-c', 'user.name=stories-bot', '-c', 'user.email=stories-bot@users.noreply.github.com', 'commit', '-q', '-m', `mídia ${data} #${n}`);
+  // ramo sempre com um arquivo só: não acumula imagens no histórico
+  git('push', '-q', '--force', `https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git`, 'HEAD:midia');
+  fs.rmSync(tmp, { recursive: true, force: true });
+  const url = `https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/midia/${nome}`;
+  // confere se o endereço já responde antes de passar ao Instagram
+  for (let i = 0; i < 12; i++) {
+    const r = await fetch(url, { method: 'HEAD' }).catch(() => null);
+    if (r && r.ok) return url;
+    await new Promise((ok) => setTimeout(ok, 5000));
+  }
+  throw new Error(`a mídia não ficou acessível em ${url} (o repositório é público?)`);
+}
+
+async function hospedarCloudinary(arquivo, data, n, tipo) {
+  const { CLOUDINARY_CLOUD, CLOUDINARY_KEY, CLOUDINARY_SECRET } = process.env;
   const timestamp = Math.floor(Date.now() / 1000);
   const params = { folder: config.pastaCloudinary, overwrite: 'true', public_id: `${data}-${n}`, timestamp };
   const assinar = Object.keys(params).sort().map((k) => `${k}=${params[k]}`).join('&');
@@ -148,9 +187,27 @@ async function publicarSlot(data, n, simular) {
   console.log(`ok ${data} #${n} publicado (media ${mediaId})`);
 }
 
+// Domingo de Páscoa (algoritmo de Meeus/Jones/Butcher)
+function pascoa(ano) {
+  const a = ano % 19, b = Math.floor(ano / 100), c = ano % 100, d = Math.floor(b / 4), e = b % 4;
+  const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  return Date.UTC(ano, Math.floor((h + l - 7 * m + 114) / 31) - 1, ((h + l - 7 * m + 114) % 31) + 1);
+}
+
+// Feriados sem pregão na B3: nacionais, os móveis da Páscoa, 24/12 e 31/12.
+// config.feriados acrescenta exceções (pregão suspenso por decisão da B3, por exemplo).
+function feriadosB3(ano) {
+  const p = pascoa(ano);
+  const desloc = (dias) => new Date(p + dias * 86400e3).toISOString().slice(0, 10);
+  const fixos = ['01-01', '04-21', '05-01', '09-07', '10-12', '11-02', '11-15', '11-20', '12-24', '12-25', '12-31'];
+  return [...fixos.map((md) => `${ano}-${md}`), desloc(-48), desloc(-47), desloc(-2), desloc(60)];
+}
+
 function diaSemPregao(data) {
   const semana = new Date(`${data}T12:00:00Z`).getUTCDay();
-  return (config.diasUteis && (semana === 0 || semana === 6)) || config.feriados.includes(data);
+  if (config.diasUteis && (semana === 0 || semana === 6)) return true;
+  return feriadosB3(Number(data.slice(0, 4))).includes(data) || config.feriados.includes(data);
 }
 
 async function agora(simular) {

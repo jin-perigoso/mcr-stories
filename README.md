@@ -46,39 +46,53 @@ Story publicado por API sai **sem figurinhas**: nada de link clicável, enquete,
 contagem regressiva, música ou menção clicável. Texto e marcações desenhados na arte funcionam normalmente.
 Stories interativos precisam ser postados à mão pelo app.
 
-## Configuração (uma vez)
+## Ativação (uma vez, uns 15 minutos)
 
-### 1. Conta do Instagram
-- @mcrupinvest como **conta profissional** (Empresa) ligada a uma **Página do Facebook**.
-- Quem configura precisa ser admin dessa Página.
+Tudo o que não depende de acesso já está pronto: geração, publicação, horários, feriados da B3
+(calculados sozinhos, inclusive Carnaval e Corpus Christi), agenda do Copom até dez/2027 e do IPCA
+até jan/2027, hospedagem das imagens e o GitHub CLI instalado neste computador.
 
-### 2. App da Meta e token
-1. developers.facebook.com > Criar app > tipo **Empresa**.
-2. Adicionar o produto **Instagram** (API com login do Facebook).
-3. No Graph API Explorer, gerar token de usuário com as permissões
-   `instagram_basic`, `instagram_content_publish`, `pages_show_list`, `pages_read_engagement`, `business_management`.
-4. Trocar por token de longa duração e pegar o **token da Página** (não expira enquanto a senha e o acesso não mudarem):
-   `GET /me/accounts` com o token longo > campo `access_token` da Página da MCR.
-5. ID da conta do Instagram: `GET /{id-da-pagina}?fields=instagram_business_account`.
+### 1. Acesso à Página (com a MCR)
+- O @mcrupinvest precisa ser **conta profissional** ligada a uma **Página do Facebook**.
+- A MCR adiciona você na Página pelo Meta Business Suite: Configurações > Pessoas > Adicionar,
+  com **acesso total** à Página e ao Instagram. Login e senha não são necessários.
 
-O app pode ficar em modo desenvolvimento: quem é admin do app e da Página consegue publicar sem revisão da Meta.
+### 2. App da Meta (no seu login do Facebook)
+1. developers.facebook.com > Meus apps > Criar app. Tipo **Empresa** e, se pedir caso de uso,
+   o de gerenciar conteúdo do Instagram com login do Facebook.
+2. Em Configurações do app > Básico, copie o **ID do app** e a **Chave secreta**.
+3. Abra o Graph API Explorer (developers.facebook.com/tools/explorer), escolha o app, clique em
+   **Gerar token de acesso** e marque: `instagram_basic`, `instagram_content_publish`,
+   `pages_show_list`, `pages_read_engagement`, `business_management`. Autorize a Página da MCR.
+4. Copie o token gerado.
 
-### 3. Cloudinary (hospedagem da imagem)
-A API do Instagram só aceita mídia por URL pública. Conta grátis em cloudinary.com > Dashboard:
-Cloud name, API Key, API Secret.
+O app pode ficar em modo desenvolvimento: como você é admin do app e da Página, publica sem revisão da Meta.
 
-### 4. Repositório no GitHub
-Repositório **privado** com esta pasta. Em Settings > Secrets and variables > Actions, criar:
+### 3. Rodar o assistente
+No PowerShell, nesta pasta:
+```
+node configurar.js
+```
+Ele pede o ID do app, a chave secreta e o token, e faz o resto:
+- troca o token por um permanente e confere as permissões;
+- encontra a Página ligada ao @mcrupinvest e testa o acesso;
+- abre o navegador para você entrar no GitHub (um clique);
+- cria o repositório, envia o código e cadastra os secrets;
+- dispara uma prévia na nuvem (gera os 6 Stories sem publicar).
 
-| Secret | Valor |
-|---|---|
-| `IG_USER_ID` | ID da conta do Instagram (passo 2.5) |
-| `IG_TOKEN` | token da Página (passo 2.4) |
-| `CLOUDINARY_CLOUD` | cloud name |
-| `CLOUDINARY_KEY` | API key |
-| `CLOUDINARY_SECRET` | API secret |
+Se a prévia estiver certa, acabou: no próximo dia útil os Stories saem sozinhos.
+Para conferir o token depois: `node configurar.js --testar`.
 
-Teste: Actions > Stories MCR > Run workflow > slot `1`.
+**Público ou privado?** Sem Cloudinary, o repositório precisa ser **público**, porque o próprio GitHub
+hospeda a imagem por alguns minutos até o Instagram buscá-la (ramo `midia`, sempre com um arquivo só).
+O token não fica no código: fica nos secrets do GitHub, que ninguém vê. Para repositório privado, o
+assistente pede uma conta grátis do Cloudinary (Cloud name, API key e API secret).
+
+| Secret | O que é | Quem cadastra |
+|---|---|---|
+| `IG_USER_ID` | ID da conta do Instagram | o assistente |
+| `IG_TOKEN` | token permanente da Página | o assistente |
+| `CLOUDINARY_*` | só no repositório privado | o assistente |
 
 ## Como funciona
 
@@ -87,6 +101,7 @@ Teste: Actions > Stories MCR > Run workflow > slot `1`.
   Se passou mais de 90 min do horário, pula.
 - O que saiu fica em `registro/AAAA-MM-DD.json`, o que impede publicar duas vezes.
 - Falhou: o GitHub manda e-mail e o erro aparece na aba Actions. Para republicar à mão: Run workflow > slot `n`.
+- Sábado, domingo e feriados da B3 não rodam. Uma pasta manual em `fila/` num feriado publica só o que estiver nela.
 - Mudou `config.json > horarios`? Ajustar também os `cron` em `.github/workflows/stories.yml` (UTC = Brasília + 3 h).
 
 ## Comandos locais

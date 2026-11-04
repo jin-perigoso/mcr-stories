@@ -17,13 +17,7 @@
     "Fechamento: OIL, S&P 500, NASDAQ, BTC, VIX, GOLD"
   ],
   "diasUteis": true,
-  "feriados": [
-    "2026-11-20",
-    "2026-12-24",
-    "2026-12-25",
-    "2026-12-31",
-    "2027-01-01"
-  ],
+  "feriados": [],
   "toleranciaMinutos": 90,
   "graphHost": "https://graph.facebook.com",
   "graphVersao": "v23.0",
@@ -32,5 +26,7 @@
     "USD",
     "EUR",
     "CNY"
-  ]
+  ],
+  "_feriados": "Os feriados da B3 são calculados sozinhos (nacionais, Carnaval, Sexta-feira Santa, Corpus Christi, 24/12 e 31/12). Use 'feriados' só para exceções.",
+  "instagramUsuario": "mcrupinvest"
 }

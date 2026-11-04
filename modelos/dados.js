@@ -1,26 +1,81 @@
-// gerado por gerar.js em 2026-11-04T00:28:31.488Z
+// gerado por gerar.js em 2026-11-04T01:02:14.004Z
 window.DADOS = {
- "data": "2026-11-04",
- "acompanhar": {
-  "titulo": "Quarta, 4 de novembro",
-  "itens": [
+ "data": "2026-11-03",
+ "pregao": {
+  "apoioAltas": "Terça, 3 de novembro. Natura liderou, com alta de 4,32%. O Ibovespa caiu 1,42%.",
+  "apoioBaixas": "Terça, 3 de novembro. Cogna teve a maior queda, de 12,66%. O Ibovespa caiu 1,42%.",
+  "ibov": {
+   "pontos": 165528.92,
+   "var": -1.42
+  },
+  "dolar": {
+   "preco": 5.4882,
+   "var": 0
+  },
+  "altas": [
    {
-    "t": "Copom decide a Selic às 18h30",
-    "d": "A decisão sobre os juros sai depois do fechamento da bolsa."
+    "cod": "NATU3",
+    "nome": "Natura",
+    "preco": 5.07,
+    "var": 4.32
    },
    {
-    "t": "Nasdaq em alta",
-    "d": "A Nasdaq subiu 0,83% ontem, a 25.372."
+    "cod": "EMBJ3",
+    "nome": "Embraer",
+    "preco": 103.84,
+    "var": 4.24
    },
    {
-    "t": "Ibovespa",
-    "d": "Fechou ontem em 165.529 pontos, queda de 1,42%. O dólar terminou a R$ 5,49."
+    "cod": "USIM5",
+    "nome": "Usiminas",
+    "preco": 5.15,
+    "var": 3
    },
    {
-    "t": "Payroll de emprego na sexta",
-    "d": "O principal dado de emprego dos EUA pesa nas apostas sobre os juros do Fed. Sai na sexta, às 10h30."
+    "cod": "SANB11",
+    "nome": "Santander Brasil",
+    "preco": 24.48,
+    "var": 2.26
+   },
+   {
+    "cod": "SMFT3",
+    "nome": "Smart Fit",
+    "preco": 15.85,
+    "var": 2.13
    }
   ],
-  "fonte": "Forex Factory, B3 e Yahoo Finance"
+  "baixas": [
+   {
+    "cod": "COGN3",
+    "nome": "Cogna",
+    "preco": 1.38,
+    "var": -12.66
+   },
+   {
+    "cod": "CMIN3",
+    "nome": "CSN Mineração",
+    "preco": 4.61,
+    "var": -5.14
+   },
+   {
+    "cod": "AZZA3",
+    "nome": "Azzas 2154",
+    "preco": 13.6,
+    "var": -5.09
+   },
+   {
+    "cod": "HAPV3",
+    "nome": "Hapvida",
+    "preco": 3.99,
+    "var": -5
+   },
+   {
+    "cod": "MGLU3",
+    "nome": "Magazine Luiza",
+    "preco": 5.09,
+    "var": -4.86
+   }
+  ],
+  "fonte": "B3 e Yahoo Finance"
  }
 };
