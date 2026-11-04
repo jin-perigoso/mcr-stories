@@ -4,10 +4,10 @@
 //   node configurar.js            ativação completa (Meta + GitHub + prévia na nuvem)
 //   node configurar.js --testar   confere se o token salvo ainda publica
 //
-// O que você precisa ter em mãos (passo a passo no README, seção "Ativação"):
-//   1. acesso de admin à Página do Facebook ligada ao @mcrupinvest
-//   2. ID e chave secreta do app da Meta
-//   3. um token de usuário gerado no Graph API Explorer com as permissões listadas no README
+// Dois caminhos (passo a passo no README, seção "Ativação"):
+//   Instagram (padrão, a MCR não tem Facebook): app da Meta no seu Facebook + token gerado
+//     com o login do Instagram da MCR. O token vale 60 dias e o publicar.js renova sozinho.
+//   Página do Facebook: ID e chave do app + token do Graph API Explorer. Token sem validade.
 
 const fs = require('fs');
 const path = require('path');
@@ -17,6 +17,7 @@ const { execFileSync, spawnSync } = require('child_process');
 const RAIZ = __dirname;
 const config = JSON.parse(fs.readFileSync(path.join(RAIZ, 'config.json'), 'utf8'));
 const GRAPH = `${config.graphHost}/${config.graphVersao}`;
+const GRAPH_IG = `${config.instagramHost}/${config.graphVersao}`;
 const ARQ_ENV = path.join(RAIZ, '.env');
 const PERMISSOES = ['instagram_basic', 'instagram_content_publish', 'pages_show_list', 'pages_read_engagement', 'business_management'];
 
@@ -25,7 +26,9 @@ const passo = (t) => console.log(`\n${t}`);
 function parar(t) { console.error(`\n  ✖ ${t}\n`); process.exit(1); }
 
 async function graph(caminho, params) {
-  const r = await fetch(`${GRAPH}/${caminho}?${new URLSearchParams(params)}`);
+  // token do login pelo Instagram começa com "IG" e usa outro host
+  const base = String(params.access_token || '').startsWith('IG') ? GRAPH_IG : GRAPH;
+  const r = await fetch(`${base}/${caminho}?${new URLSearchParams(params)}`);
   const j = await r.json();
   if (j.error) throw new Error(`${j.error.message} (código ${j.error.code})`);
   return j;
@@ -98,6 +101,40 @@ async function configurarMeta(rl) {
   salvarEnv({ IG_USER_ID: igId, IG_TOKEN: pagina.access_token });
   ok('credenciais salvas em .env (fica só neste computador)');
   return { IG_USER_ID: igId, IG_TOKEN: pagina.access_token };
+}
+
+// ---------- Instagram: login pelo Instagram, sem Página do Facebook ----------
+async function configurarInstagram(rl) {
+  passo('1/3  Instagram (login do Instagram da MCR)');
+  console.log('  No seu Facebook, em developers.facebook.com:');
+  console.log('   a) Criar app > caso de uso "Gerenciar mensagens e conteúdo no Instagram" (API do Instagram).');
+  console.log('   b) Funções do app > Funções > Adicionar pessoas > Testador do Instagram > mcrupinvest.');
+  console.log('      Aceite o convite no Instagram da MCR: instagram.com/accounts/manage_access > Convites de testador.');
+  console.log('   c) No caso de uso, "Configuração da API com login do Instagram" > Gerar tokens de acesso >');
+  console.log('      Adicionar conta > entre com o Instagram da MCR > copie o token (começa com IG).');
+  if ((await rl.question('  Abrir agora? [S/n] ')).trim().toLowerCase() !== 'n') {
+    abrir('https://developers.facebook.com/apps/creation/');
+    abrir('https://www.instagram.com/accounts/manage_access/');
+  }
+  const token = (await rl.question('  Token do Instagram: ')).trim();
+  if (!token.startsWith('IG')) parar('esse não é um token do login pelo Instagram (ele começa com IG).');
+
+  const conta = await graph('me', { access_token: token, fields: 'user_id,username,account_type,media_count' })
+    .catch((e) => parar(`token recusado: ${e.message}`));
+  const alvo = config.instagramUsuario;
+  if (conta.username?.toLowerCase() !== alvo) parar(`o token é do @${conta.username}, não do @${alvo}. Gere de novo entrando com o Instagram da MCR.`);
+  if (conta.account_type === 'PERSONAL') parar('o @' + alvo + ' é conta pessoal. No app do Instagram: Configurações > Tipo de conta > Mudar para conta profissional.');
+  ok(`conta @${conta.username} (${conta.account_type}, ${conta.media_count} publicações)`);
+
+  const limite = await graph(`${conta.user_id}/content_publishing_limit`, { access_token: token, fields: 'quota_usage,config' }).catch(() => null);
+  if (!limite) parar('o token não tem permissão de publicar. Gere de novo com instagram_business_content_publish marcado.');
+  ok('permissão de publicação confirmada');
+
+  // chave que cifra o token renovado guardado no repositório (registro/token.enc)
+  const chave = lerEnv().IG_CHAVE || require('crypto').randomBytes(32).toString('hex');
+  salvarEnv({ IG_USER_ID: String(conta.user_id), IG_TOKEN: token, IG_CHAVE: chave });
+  ok('credenciais salvas em .env (fica só neste computador); o token se renova sozinho toda semana');
+  return { IG_USER_ID: String(conta.user_id), IG_TOKEN: token, IG_CHAVE: chave };
 }
 
 // ---------- GitHub: repositório, secrets e prévia ----------
@@ -173,7 +210,8 @@ async function testar() {
   // pergunta lendo linha a linha: funciona no terminal e com respostas enviadas por pipe
   const rl = { question: async (q) => { process.stdout.write(q); const { value } = await linhas.next(); return value ?? ''; } };
   try {
-    const segredos = await configurarMeta(rl);
+    const temPagina = (await rl.question('\nO @mcrupinvest tem Página do Facebook ligada e você é admin dela? [s/N] ')).trim().toLowerCase() === 's';
+    const segredos = temPagina ? await configurarMeta(rl) : await configurarInstagram(rl);
     const run = await configurarGitHub(rl, segredos);
     await rodarPrevia(run);
   } finally {

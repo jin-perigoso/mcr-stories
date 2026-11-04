@@ -52,31 +52,32 @@ Tudo o que não depende de acesso já está pronto: geração, publicação, hor
 (calculados sozinhos, inclusive Carnaval e Corpus Christi), agenda do Copom até dez/2027 e do IPCA
 até jan/2027, hospedagem das imagens e o GitHub CLI instalado neste computador.
 
-### 1. Acesso à Página (com a MCR)
-- O @mcrupinvest precisa ser **conta profissional** ligada a uma **Página do Facebook**.
-- A MCR adiciona você na Página pelo Meta Business Suite: Configurações > Pessoas > Adicionar,
-  com **acesso total** à Página e ao Instagram. Login e senha não são necessários.
+### 1. Conta do Instagram
+O @mcrupinvest precisa ser **conta profissional** (no app: Configurações > Tipo de conta).
+A MCR não tem Facebook, então o caminho é a **API do Instagram com login do Instagram**: não precisa de Página.
 
-### 2. App da Meta (no seu login do Facebook)
-1. developers.facebook.com > Meus apps > Criar app. Tipo **Empresa** e, se pedir caso de uso,
-   o de gerenciar conteúdo do Instagram com login do Facebook.
-2. Em Configurações do app > Básico, copie o **ID do app** e a **Chave secreta**.
-3. Abra o Graph API Explorer (developers.facebook.com/tools/explorer), escolha o app, clique em
-   **Gerar token de acesso** e marque: `instagram_basic`, `instagram_content_publish`,
-   `pages_show_list`, `pages_read_engagement`, `business_management`. Autorize a Página da MCR.
-4. Copie o token gerado.
+### 2. App da Meta (no seu Facebook, com o login do Instagram da MCR)
+1. developers.facebook.com > Meus apps > **Criar app** > caso de uso **Gerenciar mensagens e conteúdo no Instagram**.
+2. Funções do app > Funções > Adicionar pessoas > **Testador do Instagram** > `mcrupinvest`.
+   No Instagram da MCR, aceite em instagram.com/accounts/manage_access > Convites de testador.
+3. No caso de uso, **Configuração da API com login do Instagram** > Gerar tokens de acesso > Adicionar conta >
+   entre com o Instagram da MCR. Copie o token (começa com `IG`).
 
-O app pode ficar em modo desenvolvimento: como você é admin do app e da Página, publica sem revisão da Meta.
+O app pode ficar em modo desenvolvimento: com a conta como testadora, publica sem revisão da Meta.
+O token vale 60 dias e o `publicar.js` renova sozinho toda semana (fica cifrado em `registro/token.enc`).
+
+Se um dia a MCR tiver Página do Facebook, o assistente também aceita o caminho antigo (token do Graph API
+Explorer com `instagram_basic`, `instagram_content_publish`, `pages_show_list`, `pages_read_engagement`,
+`business_management`), que não expira.
 
 ### 3. Rodar o assistente
 Dois cliques em **Ativar Stories MCR** na Área de Trabalho (ou, no PowerShell, nesta pasta).
-O assistente abre sozinho as páginas da Meta (criar app, chaves e Graph API Explorer):
+O assistente abre sozinho as páginas da Meta e do Instagram:
 ```
 node configurar.js
 ```
-Ele pede o ID do app, a chave secreta e o token, e faz o resto:
-- troca o token por um permanente e confere as permissões;
-- encontra a Página ligada ao @mcrupinvest e testa o acesso;
+Ele pergunta se há Página do Facebook (responda **n**), pede o token e faz o resto:
+- confere se o token é do @mcrupinvest, se a conta é profissional e se tem permissão de publicar;
 - abre o navegador para você entrar no GitHub (um clique);
 - cria o repositório, envia o código e cadastra os secrets;
 - dispara uma prévia na nuvem (gera os 6 Stories sem publicar).
@@ -92,7 +93,8 @@ assistente pede uma conta grátis do Cloudinary (Cloud name, API key e API secre
 | Secret | O que é | Quem cadastra |
 |---|---|---|
 | `IG_USER_ID` | ID da conta do Instagram | o assistente |
-| `IG_TOKEN` | token permanente da Página | o assistente |
+| `IG_TOKEN` | token do Instagram (ou da Página) | o assistente |
+| `IG_CHAVE` | chave que cifra o token renovado | o assistente |
 | `CLOUDINARY_*` | só no repositório privado | o assistente |
 
 ## Como funciona
