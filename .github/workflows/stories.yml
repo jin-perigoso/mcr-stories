@@ -1,6 +1,6 @@
 name: Stories MCR
 
-# Horários em UTC (Brasília = UTC-3). Cada horário roda duas vezes: no minuto certo
+# Horários em UTC. (Brasília = UTC-3). Cada horário roda duas vezes: no minuto certo
 # e 20 min depois, como reforço caso o GitHub atrase ou pule a primeira execução.
 # O registro impede publicação dobrada. Ao mudar config.json > horarios, ajuste aqui.
 on:
