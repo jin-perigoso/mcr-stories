@@ -1,0 +1,76 @@
+{
+ "data": "2026-11-04",
+ "geradoEm": 1793828225294,
+ "altas": [
+  {
+   "cod": "CMIN3",
+   "nome": "CSN Mineração",
+   "preco": 5.24,
+   "var": 13.67
+  },
+  {
+   "cod": "VAMO3",
+   "nome": "Vamos",
+   "preco": 2.57,
+   "var": 9.36
+  },
+  {
+   "cod": "MGLU3",
+   "nome": "Magazine Luiza",
+   "preco": 5.5,
+   "var": 8.06
+  },
+  {
+   "cod": "RENT3",
+   "nome": "Localiza",
+   "preco": 29.46,
+   "var": 7.48
+  },
+  {
+   "cod": "ASAI3",
+   "nome": "Assaí",
+   "preco": 8.1,
+   "var": 7
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "BRAV3",
+   "nome": "Brava Energia",
+   "preco": 16.01,
+   "var": -9.19
+  },
+  {
+   "cod": "PRIO3",
+   "nome": "PRIO",
+   "preco": 62.14,
+   "var": -8.73
+  },
+  {
+   "cod": "PETR3",
+   "nome": "Petrobras",
+   "preco": 53.4,
+   "var": -7.64
+  },
+  {
+   "cod": "BBSE3",
+   "nome": "BB Seguridade",
+   "preco": 37.75,
+   "var": -7.45
+  },
+  {
+   "cod": "USIM5",
+   "nome": "Usiminas",
+   "preco": 4.85,
+   "var": -5.83
+  }
+ ],
+ "ibov": {
+  "pontos": 167563.47,
+  "var": 1.23
+ },
+ "dolar": {
+  "preco": 5.4588,
+  "var": -0.54
+ }
+}
