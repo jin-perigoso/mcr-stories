@@ -103,6 +103,30 @@ async function configurarMeta(rl) {
   return { IG_USER_ID: igId, IG_TOKEN: pagina.access_token };
 }
 
+// ---------- Business Suite: token de usuário do sistema (não expira) ----------
+async function configurarSistema(rl) {
+  passo('1/3  Token do usuário do sistema (Business Suite)');
+  console.log('  Business Suite > Configurações > Usuários do sistema > MCRUP API > Gerar token:');
+  console.log('  app MCRUP Plataforma, validade "Nunca", permissões instagram_basic, instagram_content_publish,');
+  console.log('  pages_show_list, pages_read_engagement e business_management.');
+  const token = (await rl.question('  Token: ')).trim();
+  if (!token) parar('cole o token gerado.');
+  const paginas = await graph('me/accounts', { access_token: token, fields: 'name,instagram_business_account{username,id}', limit: '100' })
+    .catch((e) => parar(`token recusado: ${e.message}`));
+  const alvo = config.instagramUsuario;
+  const pagina = paginas.data.find((p) => p.instagram_business_account?.username?.toLowerCase() === alvo);
+  if (!pagina) parar(`o usuário do sistema não enxerga a Página ligada ao @${alvo}. Atribua a Página MCR UP e o Instagram a ele.`);
+  const igId = pagina.instagram_business_account.id;
+  const conta = await graph(igId, { access_token: token, fields: 'username,media_count' });
+  ok(`@${conta.username} pela Página "${pagina.name}" (${conta.media_count} publicações)`);
+  const limite = await graph(`${igId}/content_publishing_limit`, { access_token: token, fields: 'quota_usage' }).catch(() => null);
+  if (!limite) parar('o token não tem permissão de publicar. Gere de novo marcando instagram_content_publish.');
+  ok('permissão de publicação confirmada; token de usuário do sistema não expira');
+  salvarEnv({ IG_USER_ID: igId, IG_TOKEN: token });
+  ok('credenciais salvas em .env (fica só neste computador)');
+  return { IG_USER_ID: igId, IG_TOKEN: token };
+}
+
 // ---------- Instagram: login pelo Instagram, sem Página do Facebook ----------
 async function configurarInstagram(rl) {
   passo('1/3  Instagram (login do Instagram da MCR)');
@@ -210,8 +234,13 @@ async function testar() {
   // pergunta lendo linha a linha: funciona no terminal e com respostas enviadas por pipe
   const rl = { question: async (q) => { process.stdout.write(q); const { value } = await linhas.next(); return value ?? ''; } };
   try {
-    const temPagina = (await rl.question('\nO @mcrupinvest tem Página do Facebook ligada e você é admin dela? [s/N] ')).trim().toLowerCase() === 's';
-    const segredos = temPagina ? await configurarMeta(rl) : await configurarInstagram(rl);
+    console.log('
+Como vai ser a ligação com o Instagram?');
+    console.log('  1  token do usuário do sistema do Business Suite (recomendado, não expira)');
+    console.log('  2  login pelo Instagram (sem Página; token renovado toda semana)');
+    console.log('  3  token do Graph API Explorer de um admin da Página');
+    const modo = (await rl.question('Escolha [1]: ')).trim() || '1';
+    const segredos = modo === '3' ? await configurarMeta(rl) : modo === '2' ? await configurarInstagram(rl) : await configurarSistema(rl);
     const run = await configurarGitHub(rl, segredos);
     await rodarPrevia(run);
   } finally {
