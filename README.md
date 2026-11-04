@@ -69,7 +69,8 @@ até jan/2027, hospedagem das imagens e o GitHub CLI instalado neste computador.
 O app pode ficar em modo desenvolvimento: como você é admin do app e da Página, publica sem revisão da Meta.
 
 ### 3. Rodar o assistente
-No PowerShell, nesta pasta:
+Dois cliques em **Ativar Stories MCR** na Área de Trabalho (ou, no PowerShell, nesta pasta).
+O assistente abre sozinho as páginas da Meta (criar app, chaves e Graph API Explorer):
 ```
 node configurar.js
 ```
