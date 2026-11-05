@@ -11,7 +11,7 @@
    "conf": {
     "sym": "BZ=F",
     "negociadoEm": "2026-11-05",
-    "horario": 1793915804000,
+    "horario": 1793915873000,
     "intradiario": 99.19
    }
   },
@@ -37,7 +37,7 @@
    "conf": {
     "sym": "^IXIC",
     "negociadoEm": "2026-11-05",
-    "horario": 1793916431000,
+    "horario": 1793916493000,
     "intradiario": 24314.998
    }
   },
@@ -45,14 +45,14 @@
    "nome": "Bitcoin",
    "cod": "BTC",
    "chave": "BTC",
-   "preco": 75818.02,
-   "var": -5.73,
+   "preco": 75813.75,
+   "var": -5.74,
    "pre": "US$ ",
    "conf": {
     "sym": "BTC-USD",
     "negociadoEm": "2026-11-05",
-    "horario": 1793916432000,
-    "intradiario": 75818.02
+    "horario": 1793916491000,
+    "intradiario": 75813.75
    }
   },
   {
@@ -72,14 +72,14 @@
    "nome": "Ouro",
    "cod": "GOLD",
    "chave": "GOLD",
-   "preco": 4098.2001953125,
-   "var": 0.62,
+   "preco": 4098.7001953125,
+   "var": 0.63,
    "pre": "US$ ",
    "conf": {
     "sym": "GC=F",
     "negociadoEm": "2026-11-05",
-    "horario": 1793915822000,
-    "intradiario": 4098.2
+    "horario": 1793915888000,
+    "intradiario": 4098.7
    }
   }
  ]
