@@ -5,14 +5,14 @@
    "nome": "Petróleo Brent",
    "cod": "BRENT",
    "chave": "OIL",
-   "preco": 99.19000244140625,
-   "var": 4.83,
+   "preco": 99.18000030517578,
+   "var": 4.82,
    "pre": "US$ ",
    "conf": {
     "sym": "BZ=F",
     "negociadoEm": "2026-11-05",
-    "horario": 1793915873000,
-    "intradiario": 99.19
+    "horario": 1793915898000,
+    "intradiario": 99.18
    }
   },
   {
@@ -37,7 +37,7 @@
    "conf": {
     "sym": "^IXIC",
     "negociadoEm": "2026-11-05",
-    "horario": 1793916493000,
+    "horario": 1793916556000,
     "intradiario": 24314.998
    }
   },
@@ -45,14 +45,14 @@
    "nome": "Bitcoin",
    "cod": "BTC",
    "chave": "BTC",
-   "preco": 75813.75,
+   "preco": 75810.77,
    "var": -5.74,
    "pre": "US$ ",
    "conf": {
     "sym": "BTC-USD",
     "negociadoEm": "2026-11-05",
-    "horario": 1793916491000,
-    "intradiario": 75813.75
+    "horario": 1793916557000,
+    "intradiario": 75810.77
    }
   },
   {
@@ -72,14 +72,14 @@
    "nome": "Ouro",
    "cod": "GOLD",
    "chave": "GOLD",
-   "preco": 4098.7001953125,
-   "var": 0.63,
+   "preco": 4097.7998046875,
+   "var": 0.61,
    "pre": "US$ ",
    "conf": {
     "sym": "GC=F",
     "negociadoEm": "2026-11-05",
-    "horario": 1793915888000,
-    "intradiario": 4098.7
+    "horario": 1793915958000,
+    "intradiario": 4097.8
    }
   }
  ]
