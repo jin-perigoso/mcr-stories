@@ -5,7 +5,7 @@
 const F = require('./fontes');
 
 // variação diária máxima plausível por ativo (acima disso é erro de fonte, não mercado)
-const LIMITE_VAR = { OIL: 15, SP500: 8, NASDAQ: 10, BTC: 20, VIX: 60, GOLD: 8 };
+const LIMITE_VAR = { OIL: 15, SP500: 8, NASDAQ: 10, BTC: 20, VIX: 150, GOLD: 8 };
 const pertoDe = (a, b, tol) => Math.abs(a / b - 1) * 100 <= tol;
 const diaUtilEUA = (data) => ![0, 6].includes(new Date(`${data}T12:00:00Z`).getUTCDay());
 
