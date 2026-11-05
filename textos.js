@@ -76,7 +76,7 @@ function proximo(data, hoje) {
 }
 
 // artigo + nome do ativo para frases ("O petróleo WTI caiu...")
-const ARTIGO = { OIL: 'O petróleo WTI', SP500: 'O S&P 500', NASDAQ: 'A Nasdaq', BTC: 'O bitcoin', VIX: 'O VIX', GOLD: 'O ouro' };
+const ARTIGO = { OIL: 'O petróleo Brent', SP500: 'O S&P 500', NASDAQ: 'A Nasdaq', BTC: 'O bitcoin', VIX: 'O VIX', GOLD: 'O ouro' };
 
 const pct = (v) => Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
 const num = (v, casas = 2) => v.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas });

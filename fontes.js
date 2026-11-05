@@ -30,6 +30,21 @@ async function cotacao(simbolo) {
   const m = j.chart?.result?.[0]?.meta;
   if (!m || m.regularMarketPrice == null) throw new Error(`sem cotação para ${simbolo}`);
   const anterior = m.chartPreviousClose ?? m.previousClose;
+  // contratos futuros reabrem às 18h de Nova York: daí em diante o "anterior" do intradiário vira o
+  // fechamento de hoje. Pelas barras diárias, a comparação fica sempre com o pregão anterior.
+  if (simbolo.endsWith('=F')) {
+    const d = await buscar(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(simbolo)}?range=5d&interval=1d`).catch(() => null);
+    const r = d?.chart?.result?.[0];
+    const fechamentos = (r?.indicators?.quote?.[0]?.close || []).filter((c) => c != null);
+    if (fechamentos.length >= 2) {
+      const [ant, ult] = fechamentos.slice(-2);
+      return {
+        simbolo, preco: ult, anterior: ant, var: (ult / ant - 1) * 100,
+        negociadoEm: dataNoFuso(r.timestamp[r.timestamp.length - 1] * 1000, m.exchangeTimezoneName || 'UTC'),
+        horario: m.regularMarketTime * 1000,
+      };
+    }
+  }
   return {
     simbolo,
     preco: m.regularMarketPrice,

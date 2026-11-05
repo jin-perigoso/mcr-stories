@@ -2,11 +2,11 @@
  "data": "2026-11-04",
  "ativos": [
   {
-   "nome": "Petróleo WTI",
-   "cod": "OIL",
+   "nome": "Petróleo Brent",
+   "cod": "BRENT",
    "chave": "OIL",
-   "preco": 88.15,
-   "var": -8.26,
+   "preco": 94.83000183105469,
+   "var": -8.47,
    "pre": "US$ "
   },
   {
@@ -27,8 +27,8 @@
    "nome": "Bitcoin",
    "cod": "BTC",
    "chave": "BTC",
-   "preco": 80231.87,
-   "var": 3.74,
+   "preco": 80401.99,
+   "var": 3.96,
    "pre": "US$ "
   },
   {
@@ -42,8 +42,8 @@
    "nome": "Ouro",
    "cod": "GOLD",
    "chave": "GOLD",
-   "preco": 4069.4,
-   "var": 3.27,
+   "preco": 4075.699951171875,
+   "var": 3.43,
    "pre": "US$ "
   }
  ]

@@ -21,7 +21,7 @@ const lerJSON = (f, padrao) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f,
 const NOMES = lerJSON(path.join(RAIZ, 'dados-base', 'nomes.json'), {});
 
 const ATIVOS = [
-  { nome: 'Petróleo WTI', cod: 'OIL', sym: 'CL=F', pre: 'US$ ' },
+  { nome: 'Petróleo Brent', cod: 'BRENT', chave: 'OIL', sym: 'BZ=F', pre: 'US$ ' },
   { nome: 'S&P 500', cod: 'SP500', sym: '^GSPC' },
   { nome: 'Nasdaq', cod: 'NASDAQ', sym: '^IXIC' },
   { nome: 'Bitcoin', cod: 'BTC', sym: 'BTC-USD', pre: 'US$ ', diaInteiro: true },
@@ -134,7 +134,7 @@ async function tela6(data) {
     ? `${T.dataLonga(data)}. ${T.ARTIGO[maior.chave]} teve o maior movimento do dia, com ${altaQueda(maior.var)} de ${T.pct(maior.var)}.`
     : `${T.dataLonga(data)}.`;
   const nota = `Petróleo e ouro pelos contratos futuros. Bitcoin desde a meia-noite (UTC).${fechados.length ? ` Sem negociação hoje: ${fechados.join(', ')}.` : ''}`;
-  return { fechamento: { apoio, nota, ativos, fonte: 'Yahoo Finance e CME' } };
+  return { fechamento: { apoio, nota, ativos, fonte: 'Yahoo Finance, ICE e CME' } };
 }
 
 // ---------- 4 e 5 · maiores altas e baixas do Ibovespa ----------
