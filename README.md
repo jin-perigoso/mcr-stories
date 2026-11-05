@@ -99,13 +99,20 @@ assistente pede uma conta grátis do Cloudinary (Cloud name, API key e API secre
 
 ## Como funciona
 
-- O workflow roda em cada horário e tem execuções de reforço logo depois (o GitHub às vezes atrasa ou pula execuções).
-- Cada execução publica os horários de hoje que já venceram e ainda não saíram.
-  Se passou mais de 90 min do horário, pula.
+- Tudo roda no GitHub Actions; o computador não precisa estar ligado.
+- O agendamento do GitHub atrasa (já chegou a 3 h), então ele não marca a hora dos Stories. Uma execução
+  fica vigiando por ~5h40, checa a cada minuto o que venceu e, antes de terminar, chama a próxima.
+  O agendamento a cada 2 h só religa essa corrente se ela cair.
+- Antes de virar imagem, cada Story passa pela conferência (`validar.js`): data de hoje, cotação recente,
+  variação plausível, bolsa americana negociando, B3 já fechada nas altas/baixas, bitcoin conferido no
+  CoinGecko e dólar na AwesomeAPI. Reprovou: não publica e tenta de novo no minuto seguinte.
+- Com 15 min de atraso sem conseguir, abre um alerta (issue) no repositório e o GitHub manda e-mail.
+  Depois de 90 min do horário, desiste daquele Story.
 - O que saiu fica em `registro/AAAA-MM-DD.json`, o que impede publicar duas vezes.
-- Falhou: o GitHub manda e-mail e o erro aparece na aba Actions. Para republicar à mão: Run workflow > slot `n`.
-- Sábado, domingo e feriados da B3 não rodam. Uma pasta manual em `fila/` num feriado publica só o que estiver nela.
-- Mudou `config.json > horarios`? Ajustar também os `cron` em `.github/workflows/stories.yml` (UTC = Brasília + 3 h).
+- Para republicar à mão: Actions > Stories MCR > Run workflow > slot `n`.
+- Sábado, domingo e feriados da B3 não publicam. Uma pasta manual em `fila/` num feriado publica só o que estiver nela.
+- Reserva opcional: com o computador ligado, a tarefa do Windows (`agendar-windows.ps1`) roda 7 min depois
+  de cada horário e publica só o que a nuvem não publicou.
 
 ## Comandos locais
 
