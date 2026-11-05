@@ -45,14 +45,14 @@
    "nome": "Bitcoin",
    "cod": "BTC",
    "chave": "BTC",
-   "preco": 75891.04,
-   "var": -5.64,
+   "preco": 75857.75,
+   "var": -5.68,
    "pre": "US$ ",
    "conf": {
     "sym": "BTC-USD",
     "negociadoEm": "2026-11-05",
-    "horario": 1793917870000,
-    "intradiario": 75891.04
+    "horario": 1793917935000,
+    "intradiario": 75857.75
    }
   },
   {
