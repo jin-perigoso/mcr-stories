@@ -1,17 +1,20 @@
 name: Stories MCR
 
-# Horários em UTC. (Brasília = UTC-3). Cada horário roda duas vezes: no minuto certo
-# e 20 min depois, como reforço caso o GitHub atrase ou pule a primeira execução.
-# O registro impede publicação dobrada. Ao mudar config.json > horarios, ajuste aqui.
+# O agendamento do GitHub atrasa (já chegou a 3 h). Por isso cada turno liga bem antes do
+# primeiro horário e fica vigiando: a cada minuto publica o que venceu e grava o registro no
+# repositório na hora (a reserva do computador lê esse registro e não duplica).
+# Horários em UTC (Brasília = UTC-3). Ao mudar config.json > horarios, ajuste aqui.
 on:
   schedule:
-    # Só dias úteis (seg a sex). Feriados da B3 ficam em config.json > feriados.
-    - cron: '45 10 * * 1-5'        # 07:45 Brasília  calendário econômico
-    - cron: '5,45 11 * * 1-5'      # 08:05 reforço  /  08:45 o que acompanhar hoje
-    - cron: '5 12 * * 1-5'         # 09:05 reforço
-    - cron: '0,20 16 * * 1-5'      # 13:00 parcial  /  13:20 reforço
-    - cron: '30,40,50 21 * * 1-5'  # 18:30 altas  /  18:40 baixas  /  18:50 reforço
-    - cron: '0,20 22 * * 1-5'      # 19:00 fechamento  /  19:20 reforço
+    # Só dias úteis (seg a sex). Feriados da B3 o publicar.js reconhece sozinho.
+    - cron: '0 9 * * 1-5'     # 06:00 Brasília: manhã, vigia até 09:30 (Stories 1 e 2)
+    - cron: '0 14 * * 1-5'    # 11:00: tarde, vigia até 13:30 (Story 3)
+    - cron: '0 19 * * 1-5'    # 16:00: noite, vigia até 19:30 (Stories 4, 5 e 6)
+    - cron: '50 10 * * 1-5'   # reforços avulsos, caso um turno não rode
+    - cron: '50 11 * * 1-5'
+    - cron: '5 16 * * 1-5'
+    - cron: '35,45 21 * * 1-5'
+    - cron: '5 22 * * 1-5'
   workflow_dispatch:
     inputs:
       slot:
@@ -21,6 +24,9 @@ on:
         description: 'Só gerar os 6 Stories de agora, sem publicar (baixe em Artifacts)'
         type: boolean
         default: false
+      ate:
+        description: 'Vigiar até este horário de Brasília (HH:MM). Vazio = roda uma vez'
+        required: false
 
 concurrency:
   group: stories
@@ -32,7 +38,7 @@ permissions:
 jobs:
   publicar:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -47,14 +53,41 @@ jobs:
           CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
           CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECRET }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AGENDA: ${{ github.event.schedule }}
+          ATE: ${{ github.event.inputs.ate }}
         run: |
+          git config user.name "stories-bot"
+          git config user.email "stories-bot@users.noreply.github.com"
+          salvar() {
+            git add registro dados-base
+            git diff --cached --quiet && return 0
+            git commit -q -m "registro: stories publicados"
+            for i in 1 2 3; do git pull -q --rebase origin master && git push -q && return 0; sleep 5; done
+          }
           if [ "${{ github.event.inputs.previa }}" = "true" ]; then
             node gerar.js todos
-          elif [ -n "${{ github.event.inputs.slot }}" ]; then
-            node publicar.js slot "${{ github.event.inputs.slot }}"
-          else
-            node publicar.js agora
+            exit 0
           fi
+          if [ -n "${{ github.event.inputs.slot }}" ]; then
+            node publicar.js slot "${{ github.event.inputs.slot }}"
+            salvar
+            exit 0
+          fi
+          case "$AGENDA" in
+            '0 9 * * 1-5')  ATE=09:30 ;;
+            '0 14 * * 1-5') ATE=13:30 ;;
+            '0 19 * * 1-5') ATE=19:30 ;;
+          esac
+          falhas=0
+          while :; do
+            git pull -q --rebase origin master || true
+            node publicar.js agora || falhas=$((falhas+1))
+            salvar || true
+            agora=$(TZ=America/Sao_Paulo date +%H:%M)
+            if [ -z "$ATE" ] || [[ "$agora" > "$ATE" ]]; then break; fi
+            sleep 60
+          done
+          [ "$falhas" -eq 0 ] || { echo "houve $falhas execuções com erro (veja acima)"; exit 1; }
       - name: Guardar as imagens geradas
         if: always()
         uses: actions/upload-artifact@v4
@@ -63,10 +96,3 @@ jobs:
           path: gerados/
           if-no-files-found: ignore
           retention-days: 14
-      - name: Salvar registro
-        if: always() && github.event.inputs.previa != 'true'
-        run: |
-          git config user.name "stories-bot"
-          git config user.email "stories-bot@users.noreply.github.com"
-          git add registro dados-base
-          git diff --cached --quiet || (git commit -m "registro: stories publicados" && git push)
