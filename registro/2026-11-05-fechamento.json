@@ -37,7 +37,7 @@
    "conf": {
     "sym": "^IXIC",
     "negociadoEm": "2026-11-05",
-    "horario": 1793916618000,
+    "horario": 1793916680000,
     "intradiario": 24314.998
    }
   },
@@ -45,14 +45,14 @@
    "nome": "Bitcoin",
    "cod": "BTC",
    "chave": "BTC",
-   "preco": 75792.42,
-   "var": -5.76,
+   "preco": 75860.63,
+   "var": -5.68,
    "pre": "US$ ",
    "conf": {
     "sym": "BTC-USD",
     "negociadoEm": "2026-11-05",
-    "horario": 1793916612000,
-    "intradiario": 75792.42
+    "horario": 1793916677000,
+    "intradiario": 75860.63
    }
   },
   {
