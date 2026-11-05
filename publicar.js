@@ -287,6 +287,14 @@ async function agora(simular) {
     // a reserva do computador só entra se a nuvem estiver atrasada (evita publicar duas vezes)
     if (atraso < Number(process.env.RESERVA_MIN_ATRASO || 0)) continue;
     if (atraso > config.toleranciaMinutos) { console.log(`pulado ${data} #${n}: passou ${atraso} min do horário`); continue; }
+    // trava contra Story duplicado: se o Instagram já tem um Story desse horário, só registra
+    const existente = simular ? null : await jaNoAr(data, horarios, i, reg).catch(() => null);
+    if (existente) {
+      reg[n] = { arquivo: null, mediaId: existente.id, publicadoEm: existente.timestamp, detectadoNoInstagram: true };
+      salvarRegistro(data, reg);
+      console.log(`${data} #${n} já está no Instagram (media ${existente.id}); não publico de novo`);
+      continue;
+    }
     try { await publicarSlot(data, n, simular); } catch (e) {
       falhas++;
       console.error(`ERRO ${data} #${n}: ${e.message}`);
@@ -295,6 +303,18 @@ async function agora(simular) {
     }
   }
   if (falhas) process.exit(1);
+}
+
+// Story no ar publicado dentro da janela deste horário (de 2 min antes dele até 2 min antes do
+// próximo) e que não pertence a outro horário do registro.
+let storiesNoAr = null;
+async function jaNoAr(data, horarios, i, reg) {
+  if (!storiesNoAr) storiesNoAr = (await graph('GET', `${process.env.IG_USER_ID}/stories`, { fields: 'id,timestamp' })).data || [];
+  const instante = (hhmm) => Date.parse(`${data}T${hhmm}:00-03:00`);
+  const inicio = instante(horarios[i]) - 2 * 60e3;
+  const fim = horarios[i + 1] ? instante(horarios[i + 1]) - 2 * 60e3 : instante('23:59');
+  const usados = new Set(Object.values(reg).map((r) => r?.mediaId));
+  return storiesNoAr.find((s) => !usados.has(s.id) && Date.parse(s.timestamp.replace(/(\d\d)(\d\d)$/, '$1:$2')) >= inicio && Date.parse(s.timestamp.replace(/(\d\d)(\d\d)$/, '$1:$2')) < fim) || null;
 }
 
 // Alerta para o workflow transformar em issue (o GitHub manda e-mail). Um por Story por dia.
