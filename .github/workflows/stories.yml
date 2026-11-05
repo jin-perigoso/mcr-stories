@@ -53,7 +53,7 @@ jobs:
             git add registro dados-base
             git diff --cached --quiet && return 0
             git commit -q -m "registro: stories publicados"
-            for i in 1 2 3; do git pull -q --rebase origin master && git push -q && return 0; sleep 5; done
+            for i in 1 2 3; do git pull -q --rebase --autostash origin master && git push -q && return 0; sleep 5; done
           }
           if [ "${{ github.event.inputs.previa }}" = "true" ]; then
             SEM_CONFERENCIA=1 node gerar.js todos
@@ -66,7 +66,7 @@ jobs:
           fi
           fim=$(( $(date +%s) + 340*60 ))
           while [ "$(date +%s)" -lt "$fim" ]; do
-            git pull -q --rebase origin master || true
+            git pull -q --rebase --autostash origin master || true
             node publicar.js agora || echo "::warning::tentativa com erro às $(TZ=America/Sao_Paulo date +%H:%M); repete no próximo minuto"
             salvar || true
             if [ -f alerta.txt ]; then

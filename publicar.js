@@ -281,8 +281,11 @@ async function agora(simular) {
   let falhas = 0;
   for (let i = 0; i < horarios.length; i++) {
     const n = i + 1;
-    const atraso = minutos - emMinutos(horarios[i]);
+    // começa 1 min antes: gerar, hospedar e o Instagram processar leva ~1 min, e o Story cai no horário
+    const atraso = minutos - emMinutos(horarios[i]) + (config.antecipacaoMinutos ?? 0);
     if (atraso < 0 || reg[n]) continue;
+    // a reserva do computador só entra se a nuvem estiver atrasada (evita publicar duas vezes)
+    if (atraso < Number(process.env.RESERVA_MIN_ATRASO || 0)) continue;
     if (atraso > config.toleranciaMinutos) { console.log(`pulado ${data} #${n}: passou ${atraso} min do horário`); continue; }
     try { await publicarSlot(data, n, simular); } catch (e) {
       falhas++;

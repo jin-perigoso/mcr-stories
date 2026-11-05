@@ -19,6 +19,7 @@
   "diasUteis": true,
   "feriados": [],
   "toleranciaMinutos": 90,
+  "antecipacaoMinutos": 1,
   "graphHost": "https://graph.facebook.com",
   "instagramHost": "https://graph.instagram.com",
   "graphVersao": "v23.0",
