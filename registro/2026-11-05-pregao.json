@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-05",
+ "geradoEm": 1793914147396,
+ "altas": [
+  {
+   "cod": "CEAB3",
+   "nome": "C&A",
+   "preco": 7.44,
+   "var": 9.25
+  },
+  {
+   "cod": "SMFT3",
+   "nome": "Smart Fit",
+   "preco": 17.71,
+   "var": 5.48
+  },
+  {
+   "cod": "CSAN3",
+   "nome": "Cosan",
+   "preco": 2.5,
+   "var": 4.6
+  },
+  {
+   "cod": "ASAI3",
+   "nome": "Assaí",
+   "preco": 8.45,
+   "var": 4.32
+  },
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 4.18,
+   "var": 2.7
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "TEND3",
+   "nome": "Tenda",
+   "preco": 16.25,
+   "var": -17.72
+  },
+  {
+   "cod": "CMIN3",
+   "nome": "CSN Mineração",
+   "preco": 4.9,
+   "var": -6.49
+  },
+  {
+   "cod": "EMBJ3",
+   "nome": "Embraer",
+   "preco": 101.75,
+   "var": -4.96
+  },
+  {
+   "cod": "RADL3",
+   "nome": "Raia Drogasil",
+   "preco": 14.69,
+   "var": -4.86
+  },
+  {
+   "cod": "GGBR4",
+   "nome": "Gerdau",
+   "preco": 23.99,
+   "var": -3.58
+  }
+ ],
+ "ibov": {
+  "pontos": 166191.45,
+  "var": -0.82
+ },
+ "dolar": {
+  "preco": 5.5035,
+  "var": 0.83
+ },
+ "conf": {
+  "fimPregao": 1793908800000,
+  "ibovHorario": 1793913159000,
+  "ibovData": "2026-11-05",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
