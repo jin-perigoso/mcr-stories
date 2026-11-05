@@ -1,50 +1,42 @@
 name: Stories MCR
 
-# O agendamento do GitHub atrasa (já chegou a 3 h). Por isso cada turno liga bem antes do
-# primeiro horário e fica vigiando: a cada minuto publica o que venceu e grava o registro no
-# repositório na hora (a reserva do computador lê esse registro e não duplica).
-# Horários em UTC (Brasília = UTC-3). Ao mudar config.json > horarios, ajuste aqui.
+# O agendamento do GitHub atrasa (já chegou a 3 h), então ele não decide o horário dos Stories.
+# Cada execução fica vigiando por ~5h40: a cada minuto publica o que venceu (depois de conferir
+# os dados) e grava o registro no repositório. Antes de terminar, ela chama a próxima execução,
+# formando uma corrente contínua. Os agendamentos abaixo só religam a corrente se ela cair.
 on:
   schedule:
-    # Só dias úteis (seg a sex). Feriados da B3 o publicar.js reconhece sozinho.
-    - cron: '0 9 * * 1-5'     # 06:00 Brasília: manhã, vigia até 09:30 (Stories 1 e 2)
-    - cron: '0 14 * * 1-5'    # 11:00: tarde, vigia até 13:30 (Story 3)
-    - cron: '0 19 * * 1-5'    # 16:00: noite, vigia até 19:30 (Stories 4, 5 e 6)
-    - cron: '50 10 * * 1-5'   # reforços avulsos, caso um turno não rode
-    - cron: '50 11 * * 1-5'
-    - cron: '5 16 * * 1-5'
-    - cron: '35,45 21 * * 1-5'
-    - cron: '5 22 * * 1-5'
+    - cron: '17 */2 * * *'
   workflow_dispatch:
     inputs:
       slot:
-        description: 'Forçar um Story (1 a 6). Vazio = publica os horários vencidos de hoje'
+        description: 'Forçar um Story (1 a 6) agora'
         required: false
       previa:
         description: 'Só gerar os 6 Stories de agora, sem publicar (baixe em Artifacts)'
         type: boolean
         default: false
-      ate:
-        description: 'Vigiar até este horário de Brasília (HH:MM). Vazio = roda uma vez'
-        required: false
 
+# uma execução por vez; a seguinte espera na fila
 concurrency:
   group: stories
   cancel-in-progress: false
 
 permissions:
   contents: write
+  actions: write
+  issues: write
 
 jobs:
   publicar:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 355
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Publicar
+      - name: Vigiar e publicar
         env:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
@@ -53,8 +45,7 @@ jobs:
           CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
           CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECRET }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AGENDA: ${{ github.event.schedule }}
-          ATE: ${{ github.event.inputs.ate }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "stories-bot"
           git config user.email "stories-bot@users.noreply.github.com"
@@ -65,7 +56,7 @@ jobs:
             for i in 1 2 3; do git pull -q --rebase origin master && git push -q && return 0; sleep 5; done
           }
           if [ "${{ github.event.inputs.previa }}" = "true" ]; then
-            node gerar.js todos
+            SEM_CONFERENCIA=1 node gerar.js todos
             exit 0
           fi
           if [ -n "${{ github.event.inputs.slot }}" ]; then
@@ -73,21 +64,24 @@ jobs:
             salvar
             exit 0
           fi
-          case "$AGENDA" in
-            '0 9 * * 1-5')  ATE=09:30 ;;
-            '0 14 * * 1-5') ATE=13:30 ;;
-            '0 19 * * 1-5') ATE=19:30 ;;
-          esac
-          falhas=0
-          while :; do
+          fim=$(( $(date +%s) + 340*60 ))
+          while [ "$(date +%s)" -lt "$fim" ]; do
             git pull -q --rebase origin master || true
-            node publicar.js agora || falhas=$((falhas+1))
+            node publicar.js agora || echo "::warning::tentativa com erro às $(TZ=America/Sao_Paulo date +%H:%M); repete no próximo minuto"
             salvar || true
-            agora=$(TZ=America/Sao_Paulo date +%H:%M)
-            if [ -z "$ATE" ] || [[ "$agora" > "$ATE" ]]; then break; fi
+            if [ -f alerta.txt ]; then
+              while read -r linha; do
+                gh issue create -R "$GITHUB_REPOSITORY" --title "$(jq -r .titulo <<<"$linha")" --body "$(jq -r .corpo <<<"$linha")" || true
+              done < alerta.txt
+              rm -f alerta.txt
+            fi
             sleep 60
           done
-          [ "$falhas" -eq 0 ] || { echo "houve $falhas execuções com erro (veja acima)"; exit 1; }
+      - name: Chamar a próxima execução
+        if: always() && github.event.inputs.previa != 'true' && github.event.inputs.slot == ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run stories.yml -R "$GITHUB_REPOSITORY" --ref master
       - name: Guardar as imagens geradas
         if: always()
         uses: actions/upload-artifact@v4

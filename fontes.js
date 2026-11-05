@@ -30,6 +30,8 @@ async function cotacao(simbolo) {
   const m = j.chart?.result?.[0]?.meta;
   if (!m || m.regularMarketPrice == null) throw new Error(`sem cotação para ${simbolo}`);
   const anterior = m.chartPreviousClose ?? m.previousClose;
+  const fimPregao = (m.currentTradingPeriod?.regular?.end ?? 0) * 1000;
+  const intradiario = m.regularMarketPrice;
   // contratos futuros reabrem às 18h de Nova York: daí em diante o "anterior" do intradiário vira o
   // fechamento de hoje. Pelas barras diárias, a comparação fica sempre com o pregão anterior.
   if (simbolo.endsWith('=F')) {
@@ -41,7 +43,7 @@ async function cotacao(simbolo) {
       return {
         simbolo, preco: ult, anterior: ant, var: (ult / ant - 1) * 100,
         negociadoEm: dataNoFuso(r.timestamp[r.timestamp.length - 1] * 1000, m.exchangeTimezoneName || 'UTC'),
-        horario: m.regularMarketTime * 1000,
+        horario: m.regularMarketTime * 1000, fimPregao, intradiario,
       };
     }
   }
@@ -51,8 +53,18 @@ async function cotacao(simbolo) {
     anterior,
     var: anterior ? (m.regularMarketPrice / anterior - 1) * 100 : null,
     negociadoEm: dataNoFuso(m.regularMarketTime * 1000, m.exchangeTimezoneName || 'UTC'),
-    horario: m.regularMarketTime * 1000,
+    horario: m.regularMarketTime * 1000, fimPregao, intradiario,
   };
+}
+
+// ---------- segunda fonte, para conferir ----------
+async function bitcoinCoinGecko() {
+  const j = await buscar('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+  return j.bitcoin.usd;
+}
+async function dolarAwesome() {
+  const j = await buscar('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+  return Number(j.USDBRL.bid);
 }
 
 async function emLotes(itens, tamanho, fn) {
@@ -101,4 +113,4 @@ async function calendarioSemana() {
   }
 }
 
-module.exports = { cotacao, emLotes, carteiraIbov, calendarioSemana, dataNoFuso };
+module.exports = { cotacao, emLotes, carteiraIbov, calendarioSemana, dataNoFuso, bitcoinCoinGecko, dolarAwesome };

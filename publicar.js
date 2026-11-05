@@ -284,9 +284,26 @@ async function agora(simular) {
     const atraso = minutos - emMinutos(horarios[i]);
     if (atraso < 0 || reg[n]) continue;
     if (atraso > config.toleranciaMinutos) { console.log(`pulado ${data} #${n}: passou ${atraso} min do horário`); continue; }
-    try { await publicarSlot(data, n, simular); } catch (e) { falhas++; console.error(`ERRO ${data} #${n}: ${e.message}`); }
+    try { await publicarSlot(data, n, simular); } catch (e) {
+      falhas++;
+      console.error(`ERRO ${data} #${n}: ${e.message}`);
+      // 15 min de atraso sem conseguir: avisa uma vez (o workflow abre um alerta no GitHub)
+      if (atraso >= 15 && !simular) alertar(data, n, horarios[i], e.message);
+    }
   }
   if (falhas) process.exit(1);
+}
+
+// Alerta para o workflow transformar em issue (o GitHub manda e-mail). Um por Story por dia.
+function alertar(data, n, horario, erro) {
+  const marca = path.join(RAIZ, 'registro', `${data}-alertas.json`);
+  const ja = fs.existsSync(marca) ? JSON.parse(fs.readFileSync(marca, 'utf8')) : {};
+  if (ja[n]) return;
+  ja[n] = new Date().toISOString();
+  fs.writeFileSync(marca, JSON.stringify(ja, null, 2) + '\n');
+  const titulo = `Story ${n} de ${data.split('-').reverse().join('/')} (${horario}) ainda não saiu`;
+  const corpo = `${config.pautas[n - 1] || ''}\n\nO sistema segue tentando a cada minuto até ${config.toleranciaMinutos} min depois do horário.\n\nÚltimo erro:\n\n    ${erro}\n\nPara publicar à mão: Actions > Stories MCR > Run workflow > slot ${n}.`;
+  fs.appendFileSync(path.join(RAIZ, 'alerta.txt'), JSON.stringify({ titulo, corpo }) + '\n');
 }
 
 function verificar(data) {

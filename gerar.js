@@ -97,8 +97,15 @@ async function tela1(data) {
       eventos: hoje.map((e) => ({ hora: e.diaTodo ? 'Dia todo' : T.horaBR(e.hhmm), pais: T.PAISES[e.pais] || e.pais, nome: e.nome, anterior: e.anterior, projecao: e.projecao })),
       radar: semana.map((e) => ({ quando: `${T.diaSemana(e.data)}${e.diaTodo ? '' : `, ${T.horaBR(e.hhmm)}`}`, nome: `${e.nome}${e.pais !== 'BRL' && e.pais !== 'USD' ? ` (${T.PAISES[e.pais]})` : ''}` })),
       fonte: usouBR ? 'Forex Factory e Banco Central' : 'Forex Factory',
+      conf: await semanaDoCalendario(),
     },
   };
+}
+
+// período coberto pelo feed do Forex Factory (para conferir que não é a semana passada)
+async function semanaDoCalendario() {
+  const datas = (await F.calendarioSemana()).map((e) => F.dataNoFuso(new Date(e.date).getTime(), FUSO)).sort();
+  return { de: datas[0], ate: datas[datas.length - 1] };
 }
 
 // ---------- 3 e 6 · parcial e fechamento ----------
@@ -110,7 +117,8 @@ async function globais(tipo, data) {
     if (!c) throw new Error(`sem cotação de ${a.nome}: ${cot[i].reason?.message}`);
     const negociouHoje = a.diaInteiro || c.negociadoEm === data;
     if (!negociouHoje) fechados.push(a.nome);
-    return { nome: a.nome, cod: a.cod, chave: a.chave || a.cod, preco: c.preco, var: negociouHoje ? Number(c.var.toFixed(2)) : null, pre: a.pre };
+    return { nome: a.nome, cod: a.cod, chave: a.chave || a.cod, preco: c.preco, var: negociouHoje ? Number(c.var.toFixed(2)) : null, pre: a.pre,
+      conf: { sym: a.sym, negociadoEm: c.negociadoEm, horario: c.horario, intradiario: c.intradiario } };
   });
   const comVariacao = ativos.filter((a) => a.var !== null && a.chave !== 'VIX');
   const maior = comVariacao.sort((x, y) => Math.abs(y.var) - Math.abs(x.var))[0];
@@ -139,8 +147,9 @@ async function tela6(data) {
 
 // ---------- 4 e 5 · maiores altas e baixas do Ibovespa ----------
 async function pregao(data) {
+  // reaproveita a foto do pregão só se ela foi tirada depois do fechamento da B3
   const guardado = lerJSON(path.join(RAIZ, 'registro', `${data}-pregao.json`));
-  if (guardado && Date.now() - guardado.geradoEm < 60 * 60e3) return guardado;
+  if (guardado && Date.now() - guardado.geradoEm < 60 * 60e3 && guardado.conf?.fimPregao && guardado.geradoEm >= guardado.conf.fimPregao) return guardado;
 
   const carteira = await F.carteiraIbov();
   const cot = await F.emLotes(carteira, 8, (a) => F.cotacao(`${a.cod}.SA`));
@@ -160,6 +169,7 @@ async function pregao(data) {
     data, geradoEm: Date.now(), altas, baixas,
     ibov: { pontos: ibov.preco, var: Number(ibov.var.toFixed(2)) },
     dolar: { preco: dolar.preco, var: Number(dolar.var.toFixed(2)) },
+    conf: { fimPregao: ibov.fimPregao, ibovHorario: ibov.horario, ibovData: ibov.negociadoEm, acoes: validas.length, carteira: carteira.length },
   };
   salvarRegistro(`${data}-pregao.json`, p);
   return p;
@@ -174,7 +184,7 @@ async function tela45(data) {
     pregao: {
       apoioAltas: a ? `${T.dataLonga(data)}. ${a.nome} liderou, com alta de ${T.pct(a.var)}. ${ibovFrase}` : `${T.dataLonga(data)}. Nenhuma ação do índice subiu. ${ibovFrase}`,
       apoioBaixas: b ? `${T.dataLonga(data)}. ${b.nome} teve a maior queda, de ${T.pct(b.var)}. ${ibovFrase}` : `${T.dataLonga(data)}. Nenhuma ação do índice caiu. ${ibovFrase}`,
-      ibov: p.ibov, dolar: p.dolar, altas: p.altas, baixas: p.baixas, fonte: 'B3 e Yahoo Finance',
+      ibov: p.ibov, dolar: p.dolar, altas: p.altas, baixas: p.baixas, fonte: 'B3 e Yahoo Finance', conf: p.conf, geradoEm: p.geradoEm,
     },
   };
 }
@@ -247,6 +257,11 @@ function renderizar(n, dados, saida) {
 
 async function gerar(n, data) {
   const dados = await montar(n, data);
+  // conferência: com SEM_CONFERENCIA=1 (prévias) só avisa, sem barrar
+  await require('./validar').validar(n, dados).catch((e) => {
+    if (!process.env.SEM_CONFERENCIA) throw e;
+    console.warn(`aviso: ${e.message}`);
+  });
   return renderizar(n, dados, path.join(RAIZ, 'gerados', data, `${n}.jpg`));
 }
 
