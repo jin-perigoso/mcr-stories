@@ -4,10 +4,13 @@
 
 const F = require('./fontes');
 
-// variação diária máxima plausível por ativo (acima disso é erro de fonte, não mercado)
-const LIMITE_VAR = { OIL: 15, SP500: 8, NASDAQ: 10, BTC: 20, VIX: 150, GOLD: 8 };
+// variação diária máxima por ativo: tetos de circuit breaker: acima disso é erro de fonte, não mercado (dias de crise têm de passar)
+const LIMITE_VAR = { OIL: 35, SP500: 22, NASDAQ: 25, BTC: 40, VIX: 150, GOLD: 15 };
 const pertoDe = (a, b, tol) => Math.abs(a / b - 1) * 100 <= tol;
-const diaUtilEUA = (data) => ![0, 6].includes(new Date(`${data}T12:00:00Z`).getUTCDay());
+// NYSE/Nasdaq fechadas (a B3 pode abrir nesses dias)
+const FERIADOS_EUA = ['2026-11-26', '2026-12-25', '2027-01-01', '2027-01-18', '2027-02-15', '2027-03-26', '2027-05-31',
+  '2027-06-18', '2027-07-05', '2027-09-06', '2027-11-25', '2027-12-24'];
+const diaUtilEUA = (data) => ![0, 6].includes(new Date(`${data}T12:00:00Z`).getUTCDay()) && !FERIADOS_EUA.includes(data);
 
 async function validarGlobais(rotulo, bloco, data) {
   const erros = [];
@@ -44,10 +47,10 @@ async function validarPregao(p, data) {
   if (!c.fimPregao || p.geradoEm < c.fimPregao) erros.push('foto do pregão tirada antes do fechamento da B3');
   if (c.carteira && c.acoes < c.carteira * 0.8) erros.push(`só ${c.acoes} de ${c.carteira} ações do índice com cotação de hoje`);
   for (const a of [...p.altas, ...p.baixas]) {
-    if (!(a.preco > 0) || Math.abs(a.var) > 40) erros.push(`${a.cod}: preço ${a.preco} / variação ${a.var}% suspeitos`);
+    if (!(a.preco > 0) || Math.abs(a.var) > 90) erros.push(`${a.cod}: preço ${a.preco} / variação ${a.var}% suspeitos`);
   }
   if (p.altas.some((a) => a.var <= 0) || p.baixas.some((a) => a.var >= 0)) erros.push('sinal trocado entre altas e baixas');
-  if (Math.abs(p.ibov.var) > 12) erros.push(`Ibovespa com variação de ${p.ibov.var}%`);
+  if (Math.abs(p.ibov.var) > 22) erros.push(`Ibovespa com variação de ${p.ibov.var}%`);
   const dolar = await F.dolarAwesome().catch(() => null);
   if (dolar && !pertoDe(p.dolar.preco, dolar, 1)) erros.push(`dólar: Yahoo ${p.dolar.preco} x AwesomeAPI ${dolar}`);
   return erros;
