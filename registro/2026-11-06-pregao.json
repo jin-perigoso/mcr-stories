@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-06",
+ "geradoEm": 1794000558961,
+ "altas": [
+  {
+   "cod": "CSAN3",
+   "nome": "Cosan",
+   "preco": 2.77,
+   "var": 10.8
+  },
+  {
+   "cod": "CEAB3",
+   "nome": "C&A",
+   "preco": 8.11,
+   "var": 9.01
+  },
+  {
+   "cod": "CSNA3",
+   "nome": "CSN",
+   "preco": 4.41,
+   "var": 8.89
+  },
+  {
+   "cod": "MRVE3",
+   "nome": "MRV",
+   "preco": 4.45,
+   "var": 8.54
+  },
+  {
+   "cod": "SBSP3",
+   "nome": "Sabesp",
+   "preco": 26.78,
+   "var": 6.99
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "NATU3",
+   "nome": "Natura",
+   "preco": 5.17,
+   "var": -3.36
+  },
+  {
+   "cod": "UGPA3",
+   "nome": "Ultrapar",
+   "preco": 29.77,
+   "var": -2.71
+  },
+  {
+   "cod": "CXSE3",
+   "nome": "Caixa Seguridade",
+   "preco": 20.5,
+   "var": -2.15
+  },
+  {
+   "cod": "PRIO3",
+   "nome": "PRIO",
+   "preco": 60.48,
+   "var": -1.72
+  },
+  {
+   "cod": "VIVA3",
+   "nome": "Vivara",
+   "preco": 17.91,
+   "var": -1.49
+  }
+ ],
+ "ibov": {
+  "pontos": 168498.45,
+  "var": 1.39
+ },
+ "dolar": {
+  "preco": 5.5037,
+  "var": 0
+ },
+ "conf": {
+  "fimPregao": 1793995200000,
+  "ibovHorario": 1793999555000,
+  "ibovData": "2026-11-06",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
