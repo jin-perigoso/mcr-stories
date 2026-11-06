@@ -233,6 +233,53 @@ async function publicarStory(urlPublica, tipo) {
   return id;
 }
 
+// ---------- posts de feed agendados (Reels) ----------
+// feed/<pasta>/post.json = { "quando": "2026-11-06T14:00:00-03:00", "video": "video.mp4", "capa": "capa.jpg",
+// "legenda": "legenda.txt" }. Os arquivos vão no próprio repositório (público), então o endereço raw
+// do GitHub serve de hospedagem. Publica uma vez, até 90 min depois do horário.
+const ARQ_FEED = path.join(RAIZ, 'registro', 'feed.json');
+
+async function feed(simular) {
+  // só a nuvem posta no feed: a reserva local nunca disputa o mesmo post
+  if (process.env.RESERVA_MIN_ATRASO) return;
+  const dir = path.join(RAIZ, 'feed');
+  if (!fs.existsSync(dir)) return;
+  const reg = fs.existsSync(ARQ_FEED) ? JSON.parse(fs.readFileSync(ARQ_FEED, 'utf8')) : {};
+  const { IG_USER_ID, GITHUB_REPOSITORY } = process.env;
+  const repo = GITHUB_REPOSITORY || 'jin-perigoso/mcr-stories';
+  for (const nome of fs.readdirSync(dir).sort()) {
+    const arq = path.join(dir, nome, 'post.json');
+    if (!fs.existsSync(arq) || reg[nome]) continue;
+    const p = JSON.parse(fs.readFileSync(arq, 'utf8'));
+    const atraso = (Date.now() - Date.parse(p.quando)) / 60e3;
+    if (atraso > (config.toleranciaMinutos ?? 90)) { console.log(`feed ${nome}: passou da tolerância, não publico`); continue; }
+    const legenda = fs.readFileSync(path.join(dir, nome, p.legenda), 'utf8').trim();
+    // já no ar? (registro que não chegou ao repositório, por exemplo)
+    const recentes = await graph('GET', `${IG_USER_ID}/media`, { fields: 'id,caption,timestamp', limit: '10' });
+    const ja = recentes.data.find((m) => Date.parse(m.timestamp) >= Date.parse(p.quando) - 5 * 60e3 && (m.caption || '').slice(0, 60) === legenda.slice(0, 60));
+    if (ja) { reg[nome] = { mediaId: ja.id, publicadoEm: ja.timestamp, detectadoNoInstagram: true }; }
+    else {
+      const raw = (f) => `https://raw.githubusercontent.com/${repo}/master/feed/${encodeURIComponent(nome)}/${encodeURIComponent(f)}`;
+      if (simular) { console.log(`feed ${nome}: publicaria ${raw(p.video)}`); continue; }
+      const params = { media_type: 'REELS', video_url: raw(p.video), caption: legenda, share_to_feed: 'true' };
+      if (p.capa) params.cover_url = raw(p.capa);
+      const { id: container } = await graph('POST', `${IG_USER_ID}/media`, params);
+      let status = '';
+      for (let i = 0; i < 30 && status !== 'FINISHED'; i++) {
+        ({ status_code: status } = await graph('GET', container, { fields: 'status_code' }));
+        if (status === 'ERROR' || status === 'EXPIRED') throw new Error(`feed ${nome}: processamento do vídeo falhou (${status})`);
+        if (status !== 'FINISHED') await new Promise((ok) => setTimeout(ok, 10000));
+      }
+      if (status !== 'FINISHED') throw new Error(`feed ${nome}: vídeo ainda processando, tento no próximo minuto`);
+      const { id } = await graph('POST', `${IG_USER_ID}/media_publish`, { creation_id: container });
+      reg[nome] = { mediaId: id, publicadoEm: new Date().toISOString() };
+      console.log(`feed ${nome}: publicado (${id})`);
+    }
+    fs.mkdirSync(path.dirname(ARQ_FEED), { recursive: true });
+    fs.writeFileSync(ARQ_FEED, JSON.stringify(reg, null, 2) + '\n');
+  }
+}
+
 // ---------- comandos ----------
 async function publicarSlot(data, n, simular) {
   // arquivo manual na fila tem prioridade; sem ele, gera com dados ao vivo
@@ -352,9 +399,16 @@ const [cmd, ...args] = process.argv.slice(2);
 const simular = args.includes('--simular');
 const posicionais = args.filter((a) => !a.startsWith('--'));
 (async () => {
-  if (cmd === 'agora') await agora(simular);
+  if (cmd === 'agora') {
+    // posts de feed agendados rodam junto, sem atrapalhar os Stories se falharem
+    let erroFeed = null;
+    try { await feed(simular); } catch (e) { erroFeed = e; console.error(`aviso: ${e.message}`); }
+    await agora(simular);
+    if (erroFeed) throw erroFeed;
+  }
   else if (cmd === 'slot') await publicarSlot(posicionais[1] || agoraNoFuso().data, Number(posicionais[0]), simular);
   else if (cmd === 'renovar') await renovarToken(true);
+  else if (cmd === 'feed') await feed(simular);
   else if (cmd === 'verificar') verificar(posicionais[0] || agoraNoFuso().data);
   else { console.log('uso: node publicar.js agora|slot <n> [data]|verificar [data]|renovar [--simular]'); process.exit(1); }
 })().catch((e) => { console.error(`ERRO: ${e.message}`); process.exit(1); });
