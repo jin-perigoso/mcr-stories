@@ -252,6 +252,7 @@ async function feed(simular) {
     if (!fs.existsSync(arq) || reg[nome]) continue;
     const p = JSON.parse(fs.readFileSync(arq, 'utf8'));
     const atraso = (Date.now() - Date.parse(p.quando)) / 60e3;
+    if (!(atraso >= 0)) continue; // ainda não é a hora (ou data inválida)
     if (atraso > (config.toleranciaMinutos ?? 90)) { console.log(`feed ${nome}: passou da tolerância, não publico`); continue; }
     const legenda = fs.readFileSync(path.join(dir, nome, p.legenda), 'utf8').trim();
     // já no ar? (registro que não chegou ao repositório, por exemplo)
