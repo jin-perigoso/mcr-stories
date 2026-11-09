@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-09",
+ "geradoEm": 1794259790001,
+ "altas": [
+  {
+   "cod": "MBRF3",
+   "nome": "MBRF",
+   "preco": 17.61,
+   "var": 12.81
+  },
+  {
+   "cod": "NATU3",
+   "nome": "Natura",
+   "preco": 5.71,
+   "var": 10.44
+  },
+  {
+   "cod": "BEEF3",
+   "nome": "Minerva",
+   "preco": 2.82,
+   "var": 8.05
+  },
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 4.77,
+   "var": 7.19
+  },
+  {
+   "cod": "CMIN3",
+   "nome": "CSN Mineração",
+   "preco": 5.33,
+   "var": 5.96
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "BRAV3",
+   "nome": "Brava Energia",
+   "preco": 14.95,
+   "var": -3.8
+  },
+  {
+   "cod": "VAMO3",
+   "nome": "Vamos",
+   "preco": 2.59,
+   "var": -3
+  },
+  {
+   "cod": "PRIO3",
+   "nome": "PRIO",
+   "preco": 59.39,
+   "var": -1.8
+  },
+  {
+   "cod": "CYRE3",
+   "nome": "Cyrela",
+   "preco": 19.08,
+   "var": -1.14
+  },
+  {
+   "cod": "BBAS3",
+   "nome": "Banco do Brasil",
+   "preco": 17.02,
+   "var": -0.64
+  }
+ ],
+ "ibov": {
+  "pontos": 172236.05,
+  "var": 2.22
+ },
+ "dolar": {
+  "preco": 5.509,
+  "var": 0.24
+ },
+ "conf": {
+  "fimPregao": 1794254400000,
+  "ibovHorario": 1794258736000,
+  "ibovData": "2026-11-09",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
