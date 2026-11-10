@@ -1,0 +1,5 @@
+{
+  "quando": "2026-11-10T18:00:00-03:00",
+  "imagens": ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg"],
+  "legenda": "legenda.txt"
+}

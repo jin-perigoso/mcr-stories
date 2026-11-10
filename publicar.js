@@ -233,9 +233,9 @@ async function publicarStory(urlPublica, tipo) {
   return id;
 }
 
-// ---------- posts de feed agendados (Reels) ----------
+// ---------- posts de feed agendados (Reels ou carrossel) ----------
 // feed/<pasta>/post.json = { "quando": "2026-11-06T14:00:00-03:00", "video": "video.mp4", "capa": "capa.jpg",
-// "legenda": "legenda.txt" }. Os arquivos vão no próprio repositório (público), então o endereço raw
+// "legenda": "legenda.txt" } ou, para carrossel, "imagens": ["1.jpg", ...] (JPEG). Os arquivos vão no próprio repositório (público), então o endereço raw
 // do GitHub serve de hospedagem. Publica uma vez, até 90 min depois do horário.
 const ARQ_FEED = path.join(RAIZ, 'registro', 'feed.json');
 
@@ -261,17 +261,28 @@ async function feed(simular) {
     if (ja) { reg[nome] = { mediaId: ja.id, publicadoEm: ja.timestamp, detectadoNoInstagram: true }; }
     else {
       const raw = (f) => `https://raw.githubusercontent.com/${repo}/master/feed/${encodeURIComponent(nome)}/${encodeURIComponent(f)}`;
-      if (simular) { console.log(`feed ${nome}: publicaria ${raw(p.video)}`); continue; }
-      const params = { media_type: 'REELS', video_url: raw(p.video), caption: legenda, share_to_feed: 'true' };
-      if (p.capa) params.cover_url = raw(p.capa);
-      const { id: container } = await graph('POST', `${IG_USER_ID}/media`, params);
+      if (simular) { console.log(`feed ${nome}: publicaria ${(p.imagens || [p.video]).map(raw).join(', ')}`); continue; }
+      let container;
+      if (p.imagens) {
+        // carrossel: um contêiner por imagem (JPEG), depois o contêiner CAROUSEL com os filhos na ordem
+        const filhos = [];
+        for (const img of p.imagens) {
+          const { id: filho } = await graph('POST', `${IG_USER_ID}/media`, { image_url: raw(img), is_carousel_item: 'true' });
+          filhos.push(filho);
+        }
+        ({ id: container } = await graph('POST', `${IG_USER_ID}/media`, { media_type: 'CAROUSEL', children: filhos.join(','), caption: legenda }));
+      } else {
+        const params = { media_type: 'REELS', video_url: raw(p.video), caption: legenda, share_to_feed: 'true' };
+        if (p.capa) params.cover_url = raw(p.capa);
+        ({ id: container } = await graph('POST', `${IG_USER_ID}/media`, params));
+      }
       let status = '';
       for (let i = 0; i < 30 && status !== 'FINISHED'; i++) {
         ({ status_code: status } = await graph('GET', container, { fields: 'status_code' }));
-        if (status === 'ERROR' || status === 'EXPIRED') throw new Error(`feed ${nome}: processamento do vídeo falhou (${status})`);
+        if (status === 'ERROR' || status === 'EXPIRED') throw new Error(`feed ${nome}: processamento da mídia falhou (${status})`);
         if (status !== 'FINISHED') await new Promise((ok) => setTimeout(ok, 10000));
       }
-      if (status !== 'FINISHED') throw new Error(`feed ${nome}: vídeo ainda processando, tento no próximo minuto`);
+      if (status !== 'FINISHED') throw new Error(`feed ${nome}: mídia ainda processando, tento no próximo minuto`);
       const { id } = await graph('POST', `${IG_USER_ID}/media_publish`, { creation_id: container });
       reg[nome] = { mediaId: id, publicadoEm: new Date().toISOString() };
       console.log(`feed ${nome}: publicado (${id})`);
