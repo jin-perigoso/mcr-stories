@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-10",
+ "geradoEm": 1794346160562,
+ "altas": [
+  {
+   "cod": "MGLU3",
+   "nome": "Magazine Luiza",
+   "preco": 6.52,
+   "var": 11.64
+  },
+  {
+   "cod": "EMBJ3",
+   "nome": "Embraer",
+   "preco": 116.29,
+   "var": 9.3
+  },
+  {
+   "cod": "CXSE3",
+   "nome": "Caixa Seguridade",
+   "preco": 21.98,
+   "var": 3.92
+  },
+  {
+   "cod": "TIMS3",
+   "nome": "TIM",
+   "preco": 20.96,
+   "var": 3.1
+  },
+  {
+   "cod": "BBSE3",
+   "nome": "BB Seguridade",
+   "preco": 39.77,
+   "var": 3.06
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 4.25,
+   "var": -10.9
+  },
+  {
+   "cod": "BRAV3",
+   "nome": "Brava Energia",
+   "preco": 14,
+   "var": -6.35
+  },
+  {
+   "cod": "CEAB3",
+   "nome": "C&A",
+   "preco": 7.65,
+   "var": -5.2
+  },
+  {
+   "cod": "LREN3",
+   "nome": "Lojas Renner",
+   "preco": 9.72,
+   "var": -4.14
+  },
+  {
+   "cod": "CYRE3",
+   "nome": "Cyrela",
+   "preco": 18.35,
+   "var": -3.83
+  }
+ ],
+ "ibov": {
+  "pontos": 171336.98,
+  "var": -0.52
+ },
+ "dolar": {
+  "preco": 5.5837,
+  "var": 1.39
+ },
+ "conf": {
+  "fimPregao": 1794340800000,
+  "ibovHorario": 1794345142000,
+  "ibovData": "2026-11-10",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
