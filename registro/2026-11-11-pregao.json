@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-11",
+ "geradoEm": 1794432573256,
+ "altas": [
+  {
+   "cod": "MGLU3",
+   "nome": "Magazine Luiza",
+   "preco": 7.66,
+   "var": 17.48
+  },
+  {
+   "cod": "CSAN3",
+   "nome": "Cosan",
+   "preco": 3.03,
+   "var": 13.06
+  },
+  {
+   "cod": "MRVE3",
+   "nome": "MRV",
+   "preco": 4.94,
+   "var": 10.27
+  },
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 4.63,
+   "var": 8.94
+  },
+  {
+   "cod": "RAIL3",
+   "nome": "Rumo",
+   "preco": 16,
+   "var": 7.82
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "CMIN3",
+   "nome": "CSN Mineração",
+   "preco": 5.08,
+   "var": -3.42
+  },
+  {
+   "cod": "PETR4",
+   "nome": "Petrobras",
+   "preco": 43.55,
+   "var": -3.11
+  },
+  {
+   "cod": "EGIE3",
+   "nome": "Engie Brasil",
+   "preco": 26.65,
+   "var": -2.81
+  },
+  {
+   "cod": "KLBN11",
+   "nome": "Klabin",
+   "preco": 17.38,
+   "var": -1.75
+  },
+  {
+   "cod": "PSSA3",
+   "nome": "Porto Seguro",
+   "preco": 45.98,
+   "var": -1.48
+  }
+ ],
+ "ibov": {
+  "pontos": 172060.44,
+  "var": 0.42
+ },
+ "dolar": {
+  "preco": 5.5824,
+  "var": 0.04
+ },
+ "conf": {
+  "fimPregao": 1794427200000,
+  "ibovHorario": 1794431576000,
+  "ibovData": "2026-11-11",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
