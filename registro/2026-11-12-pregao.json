@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-12",
+ "geradoEm": 1794518961377,
+ "altas": [
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 5.32,
+   "var": 14.9
+  },
+  {
+   "cod": "AZZA3",
+   "nome": "Azzas 2154",
+   "preco": 16.9,
+   "var": 9.95
+  },
+  {
+   "cod": "BEEF3",
+   "nome": "Minerva",
+   "preco": 3.18,
+   "var": 5.65
+  },
+  {
+   "cod": "UGPA3",
+   "nome": "Ultrapar",
+   "preco": 31.72,
+   "var": 4.55
+  },
+  {
+   "cod": "SUZB3",
+   "nome": "Suzano",
+   "preco": 56.04,
+   "var": 4.16
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "BBAS3",
+   "nome": "Banco do Brasil",
+   "preco": 15.48,
+   "var": -8.35
+  },
+  {
+   "cod": "MGLU3",
+   "nome": "Magazine Luiza",
+   "preco": 7.07,
+   "var": -7.7
+  },
+  {
+   "cod": "TEND3",
+   "nome": "Tenda",
+   "preco": 17,
+   "var": -6.95
+  },
+  {
+   "cod": "CSNA3",
+   "nome": "CSN",
+   "preco": 4.23,
+   "var": -6.42
+  },
+  {
+   "cod": "CSAN3",
+   "nome": "Cosan",
+   "preco": 2.85,
+   "var": -5.94
+  }
+ ],
+ "ibov": {
+  "pontos": 171324.31,
+  "var": -0.43
+ },
+ "dolar": {
+  "preco": 5.6423,
+  "var": 1.06
+ },
+ "conf": {
+  "fimPregao": 1794513600000,
+  "ibovHorario": 1794518010000,
+  "ibovData": "2026-11-12",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
