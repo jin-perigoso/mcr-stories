@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-13",
+ "geradoEm": 1794605383384,
+ "altas": [
+  {
+   "cod": "MGLU3",
+   "nome": "Magazine Luiza",
+   "preco": 7.81,
+   "var": 10.47
+  },
+  {
+   "cod": "CSAN3",
+   "nome": "Cosan",
+   "preco": 3.1,
+   "var": 8.77
+  },
+  {
+   "cod": "BEEF3",
+   "nome": "Minerva",
+   "preco": 3.41,
+   "var": 7.23
+  },
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 5.68,
+   "var": 6.77
+  },
+  {
+   "cod": "MRVE3",
+   "nome": "MRV",
+   "preco": 5.04,
+   "var": 5.66
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "CSNA3",
+   "nome": "CSN",
+   "preco": 3.72,
+   "var": -12.06
+  },
+  {
+   "cod": "AZZA3",
+   "nome": "Azzas 2154",
+   "preco": 15.91,
+   "var": -5.86
+  },
+  {
+   "cod": "NATU3",
+   "nome": "Natura",
+   "preco": 5.13,
+   "var": -3.75
+  },
+  {
+   "cod": "CMIN3",
+   "nome": "CSN Mineração",
+   "preco": 4.64,
+   "var": -3.73
+  },
+  {
+   "cod": "BBAS3",
+   "nome": "Banco do Brasil",
+   "preco": 15.1,
+   "var": -2.45
+  }
+ ],
+ "ibov": {
+  "pontos": 172457.77,
+  "var": 0.66
+ },
+ "dolar": {
+  "preco": 5.6674,
+  "var": 0.39
+ },
+ "conf": {
+  "fimPregao": 1794600000000,
+  "ibovHorario": 1794604372000,
+  "ibovData": "2026-11-13",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
