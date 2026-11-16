@@ -94,6 +94,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: stories-${{ github.run_id }}
-          path: gerados/
+          path: |
+            gerados/
+            relatorios/*.pdf
           if-no-files-found: ignore
           retention-days: 14

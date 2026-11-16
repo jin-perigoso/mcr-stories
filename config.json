@@ -31,6 +31,7 @@
   ],
   "_feriados": "Os feriados da B3 são calculados sozinhos (nacionais, Carnaval, Sexta-feira Santa, Corpus Christi, 24/12 e 31/12). Use 'feriados' só para exceções.",
   "instagramUsuario": "mcrupinvest",
+  "inicioAutomacao": "2026-11-04",
   "telegram": {
     "ativo": true,
     "canal": "@mcrupinvest",
@@ -40,6 +41,9 @@
   },
   "x": {
     "ativo": true,
+    "_precos": "US$ por chamada, tabela pay-per-use do X; conferir em console.x.com > Billing e ajustar aqui",
+    "precos": { "post": 0.015, "post_com_link": 0.2, "leitura_post": 0.005, "leitura_usuario": 0.01, "midia": 0 },
+    "iof": 0.035,
     "diarios": { "abertura": 1, "parcial": 3, "fechamento": 6 },
     "enquete": { "diaSemana": 5, "hora": "10:00" }
   }

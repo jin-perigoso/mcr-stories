@@ -65,7 +65,26 @@ async function x(metodo, caminho, { json, form, query } = {}) {
   const texto = await r.text();
   const j = texto ? JSON.parse(texto) : {};
   if (!r.ok || (j.errors && !j.data)) throw new Error(`X ${caminho}: HTTP ${r.status} ${j.detail || j.title || JSON.stringify(j.errors || j).slice(0, 200)}`);
+  anotarUso(metodo, caminho, json, j);
   return j;
+}
+
+// Cada chamada que o X cobra fica anotada em registro/x-uso/AAAA-MM.json: é a base do relatório
+// semanal e do custo do mês (relatorio.js). Preços em config.x.precos (conferir no console.x.com).
+function anotarUso(metodo, caminho, json, resposta) {
+  let tipo = null;
+  if (metodo === 'POST' && caminho === 'tweets') tipo = /https?:\/\/|www\.|\b[a-z0-9-]+\.(com|br|net|io)\b/i.test(json?.text || '') ? 'post_com_link' : 'post';
+  else if (metodo === 'GET' && caminho.startsWith('users/')) tipo = 'leitura_usuario';
+  else if (metodo === 'GET' && caminho.startsWith('tweets')) tipo = 'leitura_post';
+  else if (caminho === 'media/upload' && metodo === 'POST') tipo = 'midia';
+  else if (caminho.endsWith('/finalize')) tipo = 'midia';
+  if (!tipo) return;
+  const agora = new Date();
+  const mes = new Intl.DateTimeFormat('en-CA', { timeZone: config.fuso, year: 'numeric', month: '2-digit' }).format(agora);
+  const arq = path.join(RAIZ, 'registro', 'x-uso', `${mes}.json`);
+  const lista = lerJSON(arq, []);
+  lista.push({ em: agora.toISOString(), tipo, id: resposta?.data?.id || null });
+  gravarJSON(arq, lista);
 }
 
 // ---------- mídia ----------

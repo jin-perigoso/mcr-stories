@@ -422,6 +422,7 @@ const posicionais = args.filter((a) => !a.startsWith('--'));
       const ctx = { data, minutos, horarios: horariosDoDia(data), pregao: !diaSemPregao(data) };
       await require('./telegram').ciclo(ctx).catch((e) => console.error(`aviso telegram: ${e.message}`));
       await require('./x').ciclo(ctx).catch((e) => console.error(`aviso x: ${e.message}`));
+      await require('./relatorio').automatico().catch((e) => console.error(`aviso relatório: ${e.message}`));
     }
     if (erroFeed) throw erroFeed;
     if (falhas) process.exit(1);
