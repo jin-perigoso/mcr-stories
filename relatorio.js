@@ -248,13 +248,22 @@ async function automatico() {
     const { arq, resumo } = await gerar();
     feitos[chave] = { geradoEm: new Date().toISOString(), arquivo: path.basename(arq) };
     fs.writeFileSync(arqReg, JSON.stringify(feitos, null, 1) + '\n');
-    let entregue = 'baixe em Actions > Stories MCR > a execução de hoje > Artifacts';
+    let entregue = 'disponível em Actions > Stories MCR > a execução de hoje > Artifacts';
+    // arquiva no painel (Uso e custos > Relatórios fechados), com botão de baixar para a MCR
+    if (process.env.PAINEL_SEGREDO) {
+      try {
+        const url = `${process.env.PAINEL_URL || 'https://mcrup-content.netlify.app'}/api/webhook/relatorio?nome=${encodeURIComponent(path.basename(arq))}`;
+        const r = await fetch(url, { method: 'POST', headers: { 'x-sinc': process.env.PAINEL_SEGREDO, 'Content-Type': 'application/pdf' }, body: fs.readFileSync(arq), signal: AbortSignal.timeout(60000) });
+        if (!r.ok) throw new Error(`HTTP ${r.status} ${(await r.text()).slice(0, 120)}`);
+        entregue = 'arquivado no painel (Uso e custos)';
+      } catch (e) { console.error(`relatório: painel falhou (${e.message})`); }
+    }
     // vai para o privado do Otávio no Telegram, pronto para repassar
     const eu = String(process.env.TELEGRAM_AUTORIZADOS || '').split(',')[0];
     if (process.env.TELEGRAM_TOKEN && eu) {
       try {
         await require('./telegram').api('sendDocument', { chat_id: eu, caption: resumo.replace(/\*/g, '').slice(0, 1000) }, { document: arq });
-        entregue = 'enviado no seu privado do Telegram';
+        entregue += ' e enviado no seu privado do Telegram';
       } catch (e) { console.error(`relatório: Telegram falhou (${e.message})`); }
     }
     fs.appendFileSync(path.join(RAIZ, 'alerta.txt'), JSON.stringify({ titulo: `Relatório pronto: ${chave}`, corpo: `PDF ${entregue}.\n\nO resumo com os números vai junto do PDF; não fica aqui porque o repositório é público.` }) + '\n');
