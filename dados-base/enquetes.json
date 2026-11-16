@@ -1,0 +1,10 @@
+[
+ { "pergunta": "O que mais pesou no seu humor com o mercado nesta semana?", "opcoes": ["Juros", "Dólar", "Bolsa lá fora", "Notícias de Brasília"] },
+ { "pergunta": "Com que frequência você olha a sua carteira?", "opcoes": ["Todo dia", "Toda semana", "Todo mês", "Quase nunca"] },
+ { "pergunta": "Qual tema você quer ver no próximo conteúdo da MCR?", "opcoes": ["Renda fixa", "Ações", "Previdência", "Investir no exterior"] },
+ { "pergunta": "Qual dado da semana que vem você vai acompanhar mais de perto?", "opcoes": ["Juros (Copom ou Fed)", "Inflação", "Emprego nos EUA", "Petróleo"] },
+ { "pergunta": "Você já tem previdência privada (PGBL ou VGBL)?", "opcoes": ["Tenho", "Não tenho", "Quero entender melhor"] },
+ { "pergunta": "Onde está a maior parte do seu dinheiro hoje?", "opcoes": ["Renda fixa", "Ações e fundos", "Poupança", "Prefiro não dizer"] },
+ { "pergunta": "O que mais te trava na hora de investir?", "opcoes": ["Medo de perder", "Falta de tempo", "Não sei por onde começar", "Nada, já invisto"] },
+ { "pergunta": "Você acompanha o mercado mais por onde?", "opcoes": ["Instagram", "Telegram", "YouTube", "Sites de notícia"] }
+]

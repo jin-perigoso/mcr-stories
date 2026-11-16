@@ -41,6 +41,9 @@ jobs:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
           IG_CHAVE: ${{ secrets.IG_CHAVE }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CANAL: ${{ secrets.TELEGRAM_CANAL }}
+          TELEGRAM_AUTORIZADOS: ${{ secrets.TELEGRAM_AUTORIZADOS }}
           CLOUDINARY_CLOUD: ${{ secrets.CLOUDINARY_CLOUD }}
           CLOUDINARY_KEY: ${{ secrets.CLOUDINARY_KEY }}
           CLOUDINARY_SECRET: ${{ secrets.CLOUDINARY_SECRET }}
@@ -52,7 +55,7 @@ jobs:
           salvar() {
             git add registro dados-base
             git diff --cached --quiet && return 0
-            git commit -q -m "registro: stories publicados"
+            git commit -q -m "registro: stories e telegram publicados"
             for i in 1 2 3; do git pull -q --rebase --autostash origin master && git push -q && return 0; sleep 5; done
           }
           if [ "${{ github.event.inputs.previa }}" = "true" ]; then

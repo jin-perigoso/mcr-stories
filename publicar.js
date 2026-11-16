@@ -333,7 +333,7 @@ function diaSemPregao(data) {
 async function agora(simular) {
   const { data, minutos } = agoraNoFuso();
   if (!simular) await renovarToken();
-  if (diaSemPregao(data) && !fs.existsSync(path.join(RAIZ, 'fila', data))) { console.log(`${data}: sem pregão, nada a publicar`); return; }
+  if (diaSemPregao(data) && !fs.existsSync(path.join(RAIZ, 'fila', data))) { console.log(`${data}: sem pregão, nada a publicar`); return 0; }
   // feriado ou fim de semana com pasta manual: publica só o que estiver na fila
   const horarios = horariosDoDia(data);
   const reg = lerRegistro(data);
@@ -361,7 +361,7 @@ async function agora(simular) {
       if (atraso >= 15 && !simular) alertar(data, n, horarios[i], e.message);
     }
   }
-  if (falhas) process.exit(1);
+  return falhas;
 }
 
 // Story no ar publicado dentro da janela deste horário (de 2 min antes dele até 2 min antes do
@@ -415,8 +415,15 @@ const posicionais = args.filter((a) => !a.startsWith('--'));
     // posts de feed agendados rodam junto, sem atrapalhar os Stories se falharem
     let erroFeed = null;
     try { await feed(simular); } catch (e) { erroFeed = e; console.error(`aviso: ${e.message}`); }
-    await agora(simular);
+    const falhas = await agora(simular);
+    // canal do Telegram: posts do dia, espelho do feed, enquete e robô de alertas (erro aqui não trava nada)
+    if (!simular) {
+      const { data, minutos } = agoraNoFuso();
+      await require('./telegram').ciclo({ data, minutos, horarios: horariosDoDia(data), pregao: !diaSemPregao(data) })
+        .catch((e) => console.error(`aviso telegram: ${e.message}`));
+    }
     if (erroFeed) throw erroFeed;
+    if (falhas) process.exit(1);
   }
   else if (cmd === 'slot') await publicarSlot(posicionais[1] || agoraNoFuso().data, Number(posicionais[0]), simular);
   else if (cmd === 'renovar') await renovarToken(true);
