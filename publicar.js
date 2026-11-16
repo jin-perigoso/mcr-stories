@@ -419,8 +419,9 @@ const posicionais = args.filter((a) => !a.startsWith('--'));
     // canal do Telegram: posts do dia, espelho do feed, enquete e robô de alertas (erro aqui não trava nada)
     if (!simular) {
       const { data, minutos } = agoraNoFuso();
-      await require('./telegram').ciclo({ data, minutos, horarios: horariosDoDia(data), pregao: !diaSemPregao(data) })
-        .catch((e) => console.error(`aviso telegram: ${e.message}`));
+      const ctx = { data, minutos, horarios: horariosDoDia(data), pregao: !diaSemPregao(data) };
+      await require('./telegram').ciclo(ctx).catch((e) => console.error(`aviso telegram: ${e.message}`));
+      await require('./x').ciclo(ctx).catch((e) => console.error(`aviso x: ${e.message}`));
     }
     if (erroFeed) throw erroFeed;
     if (falhas) process.exit(1);
