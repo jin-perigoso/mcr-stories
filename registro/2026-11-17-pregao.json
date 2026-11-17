@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-17",
+ "geradoEm": 1794950969395,
+ "altas": [
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 6.12,
+   "var": 12.5
+  },
+  {
+   "cod": "MGLU3",
+   "nome": "Magazine Luiza",
+   "preco": 7.95,
+   "var": 6.14
+  },
+  {
+   "cod": "CSAN3",
+   "nome": "Cosan",
+   "preco": 3.25,
+   "var": 5.18
+  },
+  {
+   "cod": "VIVT3",
+   "nome": "Vivo",
+   "preco": 35.89,
+   "var": 3.94
+  },
+  {
+   "cod": "RAIL3",
+   "nome": "Rumo",
+   "preco": 16.91,
+   "var": 3.81
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "CURY3",
+   "nome": "Cury",
+   "preco": 26.31,
+   "var": -4.15
+  },
+  {
+   "cod": "TEND3",
+   "nome": "Tenda",
+   "preco": 15.81,
+   "var": -3.18
+  },
+  {
+   "cod": "AZZA3",
+   "nome": "Azzas 2154",
+   "preco": 15.64,
+   "var": -3.1
+  },
+  {
+   "cod": "NATU3",
+   "nome": "Natura",
+   "preco": 4.75,
+   "var": -3.06
+  },
+  {
+   "cod": "DIRR3",
+   "nome": "Direcional",
+   "preco": 9.14,
+   "var": -2.56
+  }
+ ],
+ "ibov": {
+  "pontos": 169816.64,
+  "var": 0.31
+ },
+ "dolar": {
+  "preco": 5.7768,
+  "var": -0.16
+ },
+ "conf": {
+  "fimPregao": 1794945600000,
+  "ibovHorario": 1794949906000,
+  "ibovData": "2026-11-17",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
