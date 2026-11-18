@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-18",
+ "geradoEm": 1795037381302,
+ "altas": [
+  {
+   "cod": "CMIN3",
+   "nome": "CSN Mineração",
+   "preco": 5.07,
+   "var": 6.74
+  },
+  {
+   "cod": "BEEF3",
+   "nome": "Minerva",
+   "preco": 3.71,
+   "var": 6.3
+  },
+  {
+   "cod": "MGLU3",
+   "nome": "Magazine Luiza",
+   "preco": 8.32,
+   "var": 4.65
+  },
+  {
+   "cod": "MBRF3",
+   "nome": "MBRF",
+   "preco": 18.69,
+   "var": 4.06
+  },
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 6.36,
+   "var": 3.92
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "MRVE3",
+   "nome": "MRV",
+   "preco": 4.77,
+   "var": -4.79
+  },
+  {
+   "cod": "TEND3",
+   "nome": "Tenda",
+   "preco": 15.06,
+   "var": -4.74
+  },
+  {
+   "cod": "BRAV3",
+   "nome": "Brava Energia",
+   "preco": 13.16,
+   "var": -4.01
+  },
+  {
+   "cod": "CURY3",
+   "nome": "Cury",
+   "preco": 25.3,
+   "var": -3.84
+  },
+  {
+   "cod": "VAMO3",
+   "nome": "Vamos",
+   "preco": 2.59,
+   "var": -3.72
+  }
+ ],
+ "ibov": {
+  "pontos": 167537.95,
+  "var": -1.34
+ },
+ "dolar": {
+  "preco": 5.8488,
+  "var": 1.44
+ },
+ "conf": {
+  "fimPregao": 1795032000000,
+  "ibovHorario": 1795036475000,
+  "ibovData": "2026-11-18",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
