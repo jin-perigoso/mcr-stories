@@ -281,11 +281,20 @@ async function robo(estado) {
 }
 
 // ---------- chamado pelo publicar.js a cada minuto ----------
+// inscritos do canal, de hora em hora (o painel lê daqui; a Bot API não cobra)
+async function inscritos(estado) {
+  if (estado.inscritos && Date.now() - Date.parse(estado.inscritos.em) < 3600e3) return;
+  const n = await api('getChatMemberCount', { chat_id: canal() });
+  const hist = (estado.inscritosHistorico || []).filter((h) => h.dia !== hojeNoFuso());
+  estado.inscritos = { n, em: new Date().toISOString() };
+  estado.inscritosHistorico = [...hist, { dia: hojeNoFuso(), n }].slice(-120);
+}
+
 async function ciclo({ data, minutos, horarios, pregao }) {
   if (!process.env.TELEGRAM_TOKEN || TG.ativo === false) return;
   if (process.env.RESERVA_MIN_ATRASO) return; // só a nuvem fala com o Telegram (o robô não aceita dois leitores)
   const estado = lerJSON(ARQ_ESTADO, {});
-  const etapas = [['robô', () => robo(estado)], ['feed', () => feed(estado)]];
+  const etapas = [['robô', () => robo(estado)], ['feed', () => feed(estado)], ['inscritos', () => inscritos(estado)]];
   if (pregao) etapas.push(['diários', () => diarios(data, minutos, horarios)], ['enquete', () => enquete(data, minutos, estado)]);
   for (const [nome, f] of etapas) {
     try { await f(); } catch (e) { console.error(`telegram ${nome}: ${e.message}`); }

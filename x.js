@@ -265,10 +265,19 @@ async function feed(estado) {
   }
 }
 
+// seguidores do perfil, uma vez por dia (consulta de perfil é paga: ~US$ 0,01; entra no relatório de custos)
+async function seguidores(estado) {
+  if (estado.perfil && estado.perfil.dia === hojeNoFuso()) return;
+  const u = (await x('GET', 'users/me', { query: { 'user.fields': 'public_metrics' } })).data;
+  const hist = (estado.seguidoresHistorico || []).filter((h) => h.dia !== hojeNoFuso());
+  estado.perfil = { dia: hojeNoFuso(), usuario: u.username, seguidores: u.public_metrics?.followers_count ?? null, posts: u.public_metrics?.tweet_count ?? null, em: new Date().toISOString() };
+  estado.seguidoresHistorico = [...hist, { dia: hojeNoFuso(), n: estado.perfil.seguidores }].slice(-120);
+}
+
 async function ciclo({ data, minutos, horarios, pregao }) {
   if (!temChaves() || CX.ativo === false || process.env.RESERVA_MIN_ATRASO) return;
   const estado = lerJSON(ARQ_ESTADO, {});
-  const etapas = [['feed', () => feed(estado)]];
+  const etapas = [['feed', () => feed(estado)], ['seguidores', () => seguidores(estado)]];
   if (pregao) etapas.push(['diários', () => diarios(data, minutos, horarios)], ['enquete', () => enquete(data, minutos, estado)]);
   for (const [nome, f] of etapas) {
     try { await f(); } catch (e) { console.error(`x ${nome}: ${e.message}`); }
