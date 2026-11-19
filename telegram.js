@@ -95,13 +95,13 @@ async function abertura(data) {
   for (const i of a.itens) p.push(`• <b>${esc(i.t)}:</b> ${esc(i.d)}`);
   if (c.radar.length) p.push('', `<b>Ainda nesta semana:</b> ${c.radar.map((r) => `${esc(r.nome)} (${esc(r.quando.toLowerCase())})`).join('; ')}`);
   p.push('', AVISO);
-  return { texto: p.join('\n'), imagens: [1] };
+  return { texto: p.join('\n'), imagens: [1], cartao: 'abertura' };
 }
 
 async function parcial(data) {
   const { montar } = require('./gerar');
   const { parcial: p } = await montar(3, data);
-  return { texto: [`<b>Parcial das ${esc(p.hora)}</b> · ${esc(T.dataLonga(data))}`, '', tabela(p.ativos), esc(p.apoio.split('. ').slice(1).join('. ')), '', `<i>${esc(p.nota)}</i>`].join('\n'), imagens: [] };
+  return { texto: [`<b>Parcial das ${esc(p.hora)}</b> · ${esc(T.dataLonga(data))}`, '', tabela(p.ativos), esc(p.apoio.split('. ').slice(1).join('. ')), '', `<i>${esc(p.nota)}</i>`].join('\n'), imagens: [], cartao: 'parcial' };
 }
 
 async function fechamento(data) {
@@ -126,7 +126,7 @@ async function fechamento(data) {
   if (preg.altas.length) p.push(`<b>Maiores altas:</b> ${lista(preg.altas)}`);
   if (preg.baixas.length) p.push(`<b>Maiores baixas:</b> ${lista(preg.baixas)}`);
   p.push('', '<b>Lá fora</b>', tabela(fech.ativos), AVISO);
-  return { texto: p.join('\n'), imagens: [6, 4, 5] };
+  return { texto: p.join('\n'), imagens: [6, 4, 5], cartao: 'fechamento' };
 }
 
 function boasvindas() {
@@ -147,11 +147,12 @@ async function arte(data, n) {
 }
 
 // envia texto + imagens para um chat; devolve os IDs das mensagens
-async function enviar(chat, { texto, imagens }, data) {
+async function enviar(chat, { texto, imagens, cartao }, data) {
   const html = { parse_mode: 'HTML' };
   const arqs = [];
-  // config.telegram.imagens = false: só texto (as artes 9:16 dos Stories ficam grandes demais no Telegram)
-  for (const n of (TG.imagens === false ? [] : imagens)) arqs.push(await arte(data, n).catch((e) => { console.error(`telegram: sem arte ${n}: ${e.message}`); return null; }));
+  // config.telegram.imagens: "cartao" = uma arte 16:9 por post (cartao.js); false = só texto; sem a chave = artes 9:16 dos Stories
+  if (TG.imagens === 'cartao' && cartao) arqs.push(await require('./cartao').gerarCartao(cartao, data).catch((e) => { console.error(`telegram: sem cartão ${cartao}: ${e.message}`); return null; }));
+  else for (const n of (TG.imagens === false || TG.imagens === 'cartao' ? [] : imagens)) arqs.push(await arte(data, n).catch((e) => { console.error(`telegram: sem arte ${n}: ${e.message}`); return null; }));
   const fotos = arqs.filter(Boolean);
   const cabe = tamanhoVisivel(texto) <= 1024;
   const ids = [];

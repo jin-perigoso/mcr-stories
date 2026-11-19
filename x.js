@@ -144,14 +144,14 @@ async function abertura(data) {
   const preg = ultimoRegistro('pregao', data);
   if (preg) b.push('', `Ibovespa fechou ${T.quando(preg.data, data)} em ${T.num(preg.ibov.pontos, 0)} pts (${preg.ibov.var > 0 ? '+' : '−'}${T.pct(preg.ibov.var)}). Dólar a R$ ${T.num(preg.dolar.preco)}.`);
   if (c.radar.length) b.push('', `Na semana: ${c.radar.map((r) => `${r.nome} (${r.quando.toLowerCase()})`).join('; ')}`);
-  return { texto: caber(b), imagens: [1] };
+  return { texto: caber(b), imagens: [1], cartao: 'abertura' };
 }
 
 async function parcial(data) {
   const { montar } = require('./gerar');
   const { parcial: p } = await montar(3, data);
   const nomes = { 'Petróleo Brent': 'Brent' };
-  return { texto: caber([`Parcial das ${p.hora}`, '', ...p.ativos.map((a) => `${nomes[a.nome] || a.nome} ${preco(a)} ${sinal(a.var)}`), '', 'Atraso de até 15 min.']), imagens: [] };
+  return { texto: caber([`Parcial das ${p.hora}`, '', ...p.ativos.map((a) => `${nomes[a.nome] || a.nome} ${preco(a)} ${sinal(a.var)}`), '', 'Atraso de até 15 min.']), imagens: [], cartao: 'parcial' };
 }
 
 async function fechamento(data) {
@@ -174,7 +174,7 @@ async function fechamento(data) {
       preg.altas.length ? `Altas: ${lista(preg.altas)}` : '',
       preg.baixas.length ? `Baixas: ${lista(preg.baixas)}` : '',
     ].filter((l, i, a) => l !== '' || a[i - 1] !== '')),
-    imagens: [6, 4, 5],
+    imagens: [6, 4, 5], cartao: 'fechamento',
   };
 }
 
@@ -195,9 +195,14 @@ async function arte(data, n) {
   return require('./gerar').gerar(n, data);
 }
 
-async function enviar({ texto, imagens }, data) {
+async function enviar({ texto, imagens, cartao }, data) {
   const midias = [];
-  for (const n of (CX.imagens === false ? [] : imagens.slice(0, 4))) {
+  // config.x.imagens: "cartao" = uma arte 16:9 por post; false = só texto; sem a chave = artes 9:16 dos Stories
+  if (CX.imagens === 'cartao' && cartao) {
+    try { midias.push(await subirImagem(await require('./cartao').gerarCartao(cartao, data))); } catch (e) { console.error(`x: sem cartão ${cartao}: ${e.message}`); }
+    return [await postar(texto, { midias })];
+  }
+  for (const n of (CX.imagens === false || CX.imagens === 'cartao' ? [] : imagens.slice(0, 4))) {
     try { midias.push(await subirImagem(await arte(data, n))); } catch (e) { console.error(`x: sem arte ${n}: ${e.message}`); }
   }
   return [await postar(texto, { midias })];

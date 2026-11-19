@@ -7,3 +7,4 @@ alerta.txt
 modelos/dados.js
 .env.bak*
 relatorios/
+modelos/dados-cartao.js

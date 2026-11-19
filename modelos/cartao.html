@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cartão MCR</title>
+<style>
+  @font-face { font-family: 'Raleway'; src: url('fonts/Raleway-latin.woff2') format('woff2'); font-weight: 100 900;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Raleway'; src: url('fonts/Raleway-latin-ext.woff2') format('woff2'); font-weight: 100 900;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C4, U+2C60-2C7F, U+A720-A7FF; }
+  /* mesma família dos Stories (paleta do mcrupinvest.com.br), em 16:9 para Telegram e X */
+  :root { --chao: #03172c; --campo: #0b325c; --nota: #9fb3c8; --laranja: #f46a25; --alta: #3ddc84; --baixa: #ff5c5c; --m: 72px; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1600px; height: 900px; overflow: hidden; }
+  body { position: relative; color: #fff; font-family: 'Raleway', sans-serif; font-weight: 500; font-feature-settings: 'lnum' 1, 'tnum' 1; -webkit-font-smoothing: antialiased; }
+  body.abertura { background: radial-gradient(1300px 700px at 30% 118%, rgba(244,106,37,.42), transparent 66%), linear-gradient(180deg, #010e1d 0%, #03172c 50%, #0b325c 100%); }
+  body.parcial { background: radial-gradient(1300px 800px at 50% -30%, rgba(14,66,122,.95), transparent 68%), radial-gradient(600px 460px at -6% 80%, rgba(244,106,37,.12), transparent 70%), linear-gradient(180deg, #0b325c 0%, #03172c 60%, #010e1d 100%); }
+  body.fechamento { background: radial-gradient(1100px 800px at 104% -12%, rgba(244,106,37,.42), transparent 62%), radial-gradient(900px 600px at -10% 40%, rgba(14,66,122,.4), transparent 70%), linear-gradient(180deg, #052344 0%, #03172c 45%, #010e1d 100%); }
+  .up { position: absolute; right: -180px; bottom: -120px; width: 820px; opacity: .05; }
+
+  header { position: absolute; top: 56px; left: var(--m); right: var(--m); display: flex; justify-content: space-between; align-items: center; }
+  .logos { display: flex; align-items: center; gap: 26px; }
+  .logos .mcr { height: 50px; } .logos .eqi { height: 38px; opacity: .9; }
+  .momento { font-size: 24px; font-weight: 700; color: var(--laranja); }
+  main { position: absolute; top: 168px; left: var(--m); right: var(--m); bottom: 92px; display: grid; gap: 64px; }
+  h1 { font-size: 92px; font-weight: 800; line-height: .92; letter-spacing: -0.035em; }
+  h1 span { display: block; color: var(--laranja); }
+  .apoio { margin-top: 26px; font-size: 26px; line-height: 1.35; color: #dbe5ef; max-width: 520px; }
+  footer { position: absolute; left: var(--m); right: var(--m); bottom: 36px; font-size: 16px; color: var(--nota); }
+
+  .var { font-weight: 800; white-space: nowrap; }
+  .alta { color: var(--alta); } .baixa { color: var(--baixa); } .neutra { color: var(--nota); font-weight: 600; }
+  .linhas > div:nth-child(odd) { background: rgba(11,50,92,.38); }
+
+  /* abertura */
+  .abertura main { grid-template-columns: 520px 1fr; }
+  .evento { display: grid; grid-template-columns: 150px 1fr; align-items: baseline; padding: 22px 28px; }
+  .evento .hora { font-size: 44px; font-weight: 800; letter-spacing: -0.02em; }
+  .evento .hora.txt { font-size: 28px; }
+  .evento .nome { font-size: 30px; font-weight: 700; line-height: 1.15; }
+  .evento .meta { margin-top: 6px; font-size: 20px; color: var(--nota); }
+  .evento .meta i { font-style: normal; color: var(--laranja); letter-spacing: 2px; margin-right: 8px; }
+  .semana { margin-top: 36px; font-size: 22px; line-height: 1.5; color: #dbe5ef; }
+  .semana b { color: #fff; }
+  .ponto { padding: 22px 28px; } .ponto h2 { font-size: 28px; font-weight: 800; } .ponto p { margin-top: 6px; font-size: 21px; line-height: 1.35; color: #dbe5ef; }
+
+  /* parcial */
+  .parcial main { grid-template-columns: 470px 1fr; }
+  .grade { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-content: start; }
+  .ativo { padding: 22px 26px; background: rgba(11,50,92,.38); border-radius: 6px; }
+  .ativo .nome { font-size: 22px; color: var(--nota); font-weight: 600; }
+  .ativo .preco { margin-top: 6px; font-size: 36px; font-weight: 800; letter-spacing: -0.01em; }
+  .ativo .var { margin-top: 4px; font-size: 24px; }
+  .nota { margin-top: 18px; font-size: 18px; color: var(--nota); }
+
+  /* fechamento */
+  .fechamento main { grid-template-columns: 430px 1fr; gap: 64px; }
+  .fechamento h1 { font-size: 76px; }
+  .placar { margin-top: 40px; display: grid; gap: 22px; }
+  .placar .rot { font-size: 22px; color: var(--nota); }
+  .placar .val { font-size: 46px; font-weight: 800; letter-spacing: -0.02em; }
+  .placar .var { font-size: 24px; }
+  .lados { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .lados h2 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+  .rank { position: relative; display: flex; justify-content: space-between; align-items: baseline; padding: 16px 0 18px; }
+  .rank .tk { font-size: 34px; font-weight: 800; } .rank .emp { font-size: 18px; color: var(--nota); }
+  .rank .var { font-size: 34px; }
+  .rank .barra { position: absolute; left: 0; bottom: 4px; height: 4px; border-radius: 2px; opacity: .6; }
+  .fora { margin-top: 26px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .fora > div { padding: 14px 14px; background: rgba(11,50,92,.38); border-radius: 6px; }
+  .fora .nome { font-size: 17px; color: var(--nota); font-weight: 600; white-space: nowrap; }
+  .fora .var { margin-top: 4px; font-size: 22px; }
+</style>
+</head>
+<body>
+<img class="up" src="marca-up.png" alt="">
+<header><div class="logos"><img class="mcr" src="logo-mcrup-site.png" alt="MCR Up Invest"><img class="eqi" src="logo-eqi.png" alt="EQI Investimentos"></div><div class="momento" id="momento"></div></header>
+<main id="main"></main>
+<footer id="rodape"></footer>
+<script src="dados-cartao.js"></script>
+<script>
+  const D = window.CARTAO;
+  const br = (v, c = 2) => v.toLocaleString('pt-BR', { minimumFractionDigits: c, maximumFractionDigits: c });
+  const casas = (v) => (v >= 10000 ? 0 : 2);
+  const vr = (v, seta = true) => {
+    if (v == null) return '<div class="var neutra">sem negociação</div>';
+    const cl = v > 0 ? 'alta' : v < 0 ? 'baixa' : 'neutra';
+    return `<div class="var ${cl}">${seta ? (v > 0 ? '▲ ' : v < 0 ? '▼ ' : '') : ''}${v > 0 ? '+' : v < 0 ? '−' : ''}${br(Math.abs(v))}%</div>`;
+  };
+  const curto = { 'Petróleo Brent': 'Brent' };
+  const aviso = 'Conteúdo informativo, não é recomendação de investimento.';
+
+  const telas = {
+    abertura() {
+      const c = D.calendario, a = D.acompanhar;
+      const direita = c.eventos.length
+        ? `<div class="linhas">${c.eventos.map((e) => `<div class="evento"><div class="hora ${/\d/.test(e.hora) ? '' : 'txt'}">${e.hora}</div><div><div class="nome">${e.nome}</div><div class="meta"><i>★★★</i>${e.pais}${e.projecao ? ` · projeção ${e.projecao}` : ''}</div></div></div>`).join('')}</div>`
+        : `<div class="linhas">${a.itens.slice(0, 3).map((i) => `<div class="ponto"><h2>${i.t}</h2><p>${i.d}</p></div>`).join('')}</div>`;
+      return {
+        momento: 'Pré-pregão', rodape: `Fonte: ${c.fonte}. ${aviso}`,
+        html: `<div><h1>Agenda<span>do dia</span></h1><p class="apoio">${c.titulo}. ${c.apoio}</p>
+          ${c.radar.length ? `<p class="semana"><b>Ainda nesta semana</b><br>${c.radar.map((r) => `${r.quando}: ${r.nome}`).join('<br>')}</p>` : ''}</div>${direita}`,
+      };
+    },
+    parcial() {
+      const p = D.parcial;
+      return {
+        momento: `Parcial, ${p.hora}`, rodape: `Fonte: ${p.fonte}. ${aviso}`,
+        html: `<div><h1>Parcial<span>das ${p.hora}</span></h1><p class="apoio">${p.apoio.split('. ').slice(1).join('. ')}</p></div>
+          <div><div class="grade">${p.ativos.map((a) => `<div class="ativo"><div class="nome">${curto[a.nome] || a.nome}</div><div class="preco">${a.pre || ''}${br(a.preco, casas(a.preco))}</div>${vr(a.var)}</div>`).join('')}</div><p class="nota">${p.nota}</p></div>`,
+      };
+    },
+    fechamento() {
+      const p = D.pregao, f = D.fechamento;
+      const lado = (titulo, lista, cor) => {
+        const maior = Math.max(...lista.map((a) => Math.abs(a.var)), 0.01);
+        return `<div><h2>${titulo}</h2>${lista.slice(0, 3).map((a) => `<div class="rank"><div class="barra" style="width:${Math.round(Math.abs(a.var) / maior * 100)}%;background:${cor}"></div><div><div class="tk">${a.cod}</div><div class="emp">${a.nome}</div></div>${vr(a.var, false)}</div>`).join('') || '<p class="emp">Nenhuma no dia.</p>'}</div>`;
+      };
+      return {
+        momento: 'Fechamento', rodape: `Fonte: B3, Yahoo Finance, ICE e CME. ${aviso}`,
+        html: `<div><h1>Fechamento<span>${D.dataCurta}</span></h1>
+            <div class="placar"><div><div class="rot">Ibovespa</div><div class="val">${br(p.ibov.pontos, 0)} pts</div>${vr(p.ibov.var)}</div>
+            <div><div class="rot">Dólar</div><div class="val">R$ ${br(p.dolar.preco)}</div>${vr(p.dolar.var)}</div></div></div>
+          <div><div class="lados">${lado('Maiores altas', p.altas, 'var(--alta)')}${lado('Maiores baixas', p.baixas, 'var(--baixa)')}</div>
+            <div class="fora">${f.ativos.map((a) => `<div><div class="nome">${curto[a.nome] || a.nome}</div>${vr(a.var)}</div>`).join('')}</div></div>`,
+      };
+    },
+  };
+  const t = telas[D.tipo]();
+  document.body.className = D.tipo;
+  document.getElementById('momento').textContent = t.momento;
+  document.getElementById('main').innerHTML = t.html;
+  document.getElementById('rodape').textContent = t.rodape;
+</script>
+</body>
+</html>
