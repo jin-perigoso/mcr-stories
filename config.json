@@ -32,6 +32,10 @@
   "_feriados": "Os feriados da B3 são calculados sozinhos (nacionais, Carnaval, Sexta-feira Santa, Corpus Christi, 24/12 e 31/12). Use 'feriados' só para exceções.",
   "instagramUsuario": "mcrupinvest",
   "inicioAutomacao": "2026-11-04",
+  "_semanais": "Stories fixos semanais, fora dos 6 diários; diaSemana 1 = segunda",
+  "semanais": [
+    { "nome": "comunidade", "diaSemana": 1, "hora": "12:00", "arquivo": "modelos/comunidade.jpg" }
+  ],
   "telegram": {
     "ativo": true,
     "canal": "@mcrupinvest",

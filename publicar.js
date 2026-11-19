@@ -361,6 +361,31 @@ async function agora(simular) {
       if (atraso >= 15 && !simular) alertar(data, n, horarios[i], e.message);
     }
   }
+  falhas += await semanais(data, minutos, reg, simular);
+  return falhas;
+}
+
+// Stories fixos de toda semana (config.semanais), fora dos 6 diários. Ex.: segunda 12h, "Entre na nossa
+// comunidade, link na bio". Ficam no registro do dia com a chave do nome (não contam como Story diário).
+async function semanais(data, minutos, reg, simular) {
+  // só a nuvem publica estes (a reserva local não disputa)
+  if (process.env.RESERVA_MIN_ATRASO) return 0;
+  const semana = new Date(`${data}T12:00:00Z`).getUTCDay();
+  let falhas = 0;
+  for (const s of config.semanais || []) {
+    if (s.diaSemana !== semana || reg[s.nome]) continue;
+    const atraso = minutos - emMinutos(s.hora);
+    if (atraso < 0 || atraso > config.toleranciaMinutos) continue;
+    const arquivo = path.join(RAIZ, s.arquivo);
+    if (simular) { console.log(`[simulação] publicaria o Story semanal ${s.nome}`); continue; }
+    try {
+      const url = await hospedar(arquivo, data, s.nome, 'image');
+      const mediaId = await publicarStory(url, 'image');
+      reg[s.nome] = { arquivo: path.basename(arquivo), mediaId, publicadoEm: new Date().toISOString() };
+      salvarRegistro(data, reg);
+      console.log(`ok ${data} Story semanal ${s.nome} (media ${mediaId})`);
+    } catch (e) { falhas++; console.error(`ERRO Story semanal ${s.nome}: ${e.message}`); }
+  }
   return falhas;
 }
 
