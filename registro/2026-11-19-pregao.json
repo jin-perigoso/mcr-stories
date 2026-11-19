@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-19",
+ "geradoEm": 1795123774052,
+ "altas": [
+  {
+   "cod": "USIM5",
+   "nome": "Usiminas",
+   "preco": 5.14,
+   "var": 2.59
+  },
+  {
+   "cod": "FLRY3",
+   "nome": "Fleury",
+   "preco": 21.51,
+   "var": 2.53
+  },
+  {
+   "cod": "GOAU4",
+   "nome": "Metalúrgica Gerdau",
+   "preco": 11.5,
+   "var": 2.22
+  },
+  {
+   "cod": "BBAS3",
+   "nome": "Banco do Brasil",
+   "preco": 14.3,
+   "var": 1.27
+  },
+  {
+   "cod": "TEND3",
+   "nome": "Tenda",
+   "preco": 15.23,
+   "var": 1.13
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "AZZA3",
+   "nome": "Azzas 2154",
+   "preco": 14.63,
+   "var": -7.29
+  },
+  {
+   "cod": "NATU3",
+   "nome": "Natura",
+   "preco": 4.48,
+   "var": -6.28
+  },
+  {
+   "cod": "CSNA3",
+   "nome": "CSN",
+   "preco": 3.43,
+   "var": -6.03
+  },
+  {
+   "cod": "CEAB3",
+   "nome": "C&A",
+   "preco": 7.5,
+   "var": -4.82
+  },
+  {
+   "cod": "POMO4",
+   "nome": "Marcopolo",
+   "preco": 3.62,
+   "var": -4.23
+  }
+ ],
+ "ibov": {
+  "pontos": 166376.44,
+  "var": -0.69
+ },
+ "dolar": {
+  "preco": 5.9346,
+  "var": 1.47
+ },
+ "conf": {
+  "fimPregao": 1795118400000,
+  "ibovHorario": 1795122870000,
+  "ibovData": "2026-11-19",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
