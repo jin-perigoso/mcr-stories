@@ -176,10 +176,13 @@ const emMinutos = (hhmm) => { const [h, m] = hhmm.split(':').map(Number); return
 
 async function diarios(data, minutos, horarios) {
   const reg = lerJSON(arqDia(data), {});
+  const slots = Object.values(TG.diarios || {}).sort((a, b) => a - b);
   for (const [qual, slot] of Object.entries(TG.diarios || {})) {
     const atraso = minutos - emMinutos(horarios[slot - 1]);
     if (atraso < 0 || reg[qual]) continue;
-    if (atraso > (config.toleranciaMinutos ?? 90)) continue;
+    // atrasado ainda sai, até a hora do próximo post do dia (o fechamento vale até o fim do dia)
+    const prox = slots.find((s) => s > slot);
+    if (minutos >= (prox ? emMinutos(horarios[prox - 1]) : 24 * 60)) continue;
     try {
       const ids = await enviar(canal(), await POSTS[qual](data), data);
       reg[qual] = { ids, publicadoEm: new Date().toISOString() };
