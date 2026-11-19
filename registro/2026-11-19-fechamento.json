@@ -1,0 +1,86 @@
+{
+ "data": "2026-11-19",
+ "ativos": [
+  {
+   "nome": "Petróleo Brent",
+   "cod": "BRENT",
+   "chave": "OIL",
+   "preco": 90.05000305175781,
+   "var": -2.07,
+   "pre": "US$ ",
+   "conf": {
+    "sym": "BZ=F",
+    "negociadoEm": "2026-11-19",
+    "horario": 1795124836000,
+    "intradiario": 90.05
+   }
+  },
+  {
+   "nome": "S&P 500",
+   "cod": "SP500",
+   "chave": "SP500",
+   "preco": 7175.83,
+   "var": -2.02,
+   "conf": {
+    "sym": "^GSPC",
+    "negociadoEm": "2026-11-19",
+    "horario": 1795123201000,
+    "intradiario": 7175.83
+   }
+  },
+  {
+   "nome": "Nasdaq",
+   "cod": "NASDAQ",
+   "chave": "NASDAQ",
+   "preco": 23879.2,
+   "var": -2.25,
+   "conf": {
+    "sym": "^IXIC",
+    "negociadoEm": "2026-11-19",
+    "horario": 1795125545000,
+    "intradiario": 23879.2
+   }
+  },
+  {
+   "nome": "Bitcoin",
+   "cod": "BTC",
+   "chave": "BTC",
+   "preco": 61489.14,
+   "var": -2.38,
+   "pre": "US$ ",
+   "conf": {
+    "sym": "BTC-USD",
+    "negociadoEm": "2026-11-19",
+    "horario": 1795125540000,
+    "intradiario": 61489.14
+   }
+  },
+  {
+   "nome": "VIX",
+   "cod": "Volatilidade do S&P 500",
+   "chave": "VIX",
+   "preco": 28.44,
+   "var": 15.8,
+   "conf": {
+    "sym": "^VIX",
+    "negociadoEm": "2026-11-19",
+    "horario": 1795122901000,
+    "intradiario": 28.44
+   }
+  },
+  {
+   "nome": "Ouro",
+   "cod": "GOLD",
+   "chave": "GOLD",
+   "preco": 3623,
+   "var": -3.18,
+   "pre": "US$ ",
+   "conf": {
+    "sym": "GC=F",
+    "negociadoEm": "2026-11-19",
+    "horario": 1795124942000,
+    "intradiario": 3623
+   }
+  }
+ ]
+}
