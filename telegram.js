@@ -216,7 +216,9 @@ async function feed(estado) {
     const dir = path.join(RAIZ, 'feed', nome);
     const p = lerJSON(path.join(dir, 'post.json'));
     if (!p || p.telegram === false) { estado.feed[nome] = { pulado: true }; continue; }
-    const legenda = esc(fs.readFileSync(path.join(dir, p.legenda), 'utf8').trim());
+    // telegram.txt na pasta do post substitui a legenda do Instagram (ex.: chamada de comentário que só vale lá)
+    const proprio = path.join(dir, 'telegram.txt');
+    const legenda = esc(fs.readFileSync(fs.existsSync(proprio) ? proprio : path.join(dir, p.legenda), 'utf8').trim());
     const cabe = legenda.length <= 1024;
     const ids = [];
     if (p.imagens) {

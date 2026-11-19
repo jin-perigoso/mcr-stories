@@ -447,6 +447,8 @@ const posicionais = args.filter((a) => !a.startsWith('--'));
       const ctx = { data, minutos, horarios: horariosDoDia(data), pregao: !diaSemPregao(data) };
       await require('./telegram').ciclo(ctx).catch((e) => console.error(`aviso telegram: ${e.message}`));
       await require('./x').ciclo(ctx).catch((e) => console.error(`aviso x: ${e.message}`));
+      // isca: comentou a palavra-chave, recebe o material no direct (só a nuvem)
+      if (!process.env.RESERVA_MIN_ATRASO) await require('./isca').atender().catch((e) => console.error(`aviso isca: ${e.message}`));
       await require('./relatorio').automatico().catch((e) => console.error(`aviso relatório: ${e.message}`));
     }
     if (erroFeed) throw erroFeed;
