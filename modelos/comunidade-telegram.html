@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Story comunidade MCR</title>
+<style>
+  @font-face { font-family: 'Raleway'; src: url('fonts/Raleway-latin.woff2') format('woff2'); font-weight: 100 900;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Raleway'; src: url('fonts/Raleway-latin-ext.woff2') format('woff2'); font-weight: 100 900;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C4, U+2C60-2C7F, U+A720-A7FF; }
+  :root { --chao: #03172c; --nota: #9fb3c8; --laranja: #f46a25; --m: 80px; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; }
+  body {
+    position: relative; color: #fff; font-family: 'Raleway', sans-serif; font-weight: 500; font-feature-settings: 'lnum' 1, 'tnum' 1; -webkit-font-smoothing: antialiased;
+    background:
+      radial-gradient(1200px 900px at 50% 112%, rgba(244,106,37,.45), transparent 66%),
+      radial-gradient(1000px 900px at 105% -8%, rgba(14,66,122,.75), transparent 65%),
+      repeating-linear-gradient(115deg, rgba(255,255,255,.03) 0 2px, transparent 2px 44px),
+      linear-gradient(165deg, #052344 0%, #03172c 55%, #010e1d 100%);
+  }
+  .up { position: absolute; right: -330px; top: 520px; width: 1300px; opacity: .05; }
+  /* topo seguro y>=250 e base livre de 250 px, como nos Stories diários */
+  .story { position: absolute; inset: 250px 0 250px; }
+  .marca { display: flex; align-items: center; justify-content: space-between; padding: 0 var(--m); }
+  .logos { display: flex; align-items: center; gap: 34px; }
+  .logos .mcr { height: 66px; } .logos .eqi { height: 50px; opacity: .9; }
+  .momento { font-size: 30px; font-weight: 700; color: var(--laranja); }
+  h1 { margin: 110px var(--m) 0; font-size: 132px; font-weight: 800; line-height: .92; letter-spacing: -0.035em; }
+  h1 span { display: block; color: var(--laranja); }
+  .apoio { margin: 44px var(--m) 0; font-size: 40px; line-height: 1.3; max-width: 880px; color: #dbe5ef; }
+  .canais { margin-top: 70px; }
+  .canal { padding: 40px var(--m); }
+  .canal:nth-child(odd) { background: rgba(11,50,92,.42); }
+  .canal h2 { font-size: 50px; font-weight: 800; letter-spacing: -0.01em; }
+  .canal p { margin-top: 10px; font-size: 32px; line-height: 1.35; color: #dbe5ef; }
+  .cta { position: absolute; left: var(--m); right: var(--m); bottom: 70px; }
+  .cta .botao { display: flex; align-items: center; justify-content: center; gap: 22px; height: 150px; border-radius: 75px; background: var(--laranja); font-size: 64px; font-weight: 800; letter-spacing: .02em; }
+  .cta .botao svg { width: 54px; height: 54px; }
+  .cta p { margin-top: 24px; text-align: center; font-size: 30px; color: var(--nota); }
+</style>
+</head>
+<body>
+<img class="up" src="marca-up.png" alt="">
+<div class="story">
+  <div class="marca">
+    <div class="logos"><img class="mcr" src="logo-mcrup-site.png" alt="MCR Up Invest"><img class="eqi" src="logo-eqi.png" alt="EQI Investimentos"></div>
+    <div class="momento">Comunidade</div>
+  </div>
+  <h1>Entre no nosso<span>canal.</span></h1>
+  <p class="apoio">O mercado todo dia útil, direto no seu celular. De graça.</p>
+  <div class="canais">
+    <div class="canal"><h2>Canal no Telegram</h2><p>Agenda às 7h45, parcial às 13h e fechamento às 19h, com as maiores altas e baixas.</p></div>
+    <div class="canal"><h2>Avisos na hora</h2><p>Quando sai algo importante, como uma decisão de juros, você fica sabendo ali.</p></div>
+  </div>
+  <div class="cta">
+    <div class="botao"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>LINK NA BIO</div>
+    <p>@mcrupinvest</p>
+  </div>
+</div>
+</body>
+</html>

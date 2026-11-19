@@ -34,7 +34,7 @@
   "inicioAutomacao": "2026-11-04",
   "_semanais": "Stories fixos semanais, fora dos 6 diários; diaSemana 1 = segunda",
   "semanais": [
-    { "nome": "comunidade", "diaSemana": 1, "hora": "12:00", "arquivo": "modelos/comunidade.jpg" }
+    { "nome": "comunidade", "diaSemana": 1, "hora": "12:00", "arquivo": "modelos/comunidade-telegram.jpg" }
   ],
   "telegram": {
     "ativo": true,
