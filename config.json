@@ -37,6 +37,7 @@
     "canal": "@mcrupinvest",
     "_diarios": "post no Telegram -> número do Story cujo horário ele segue",
     "diarios": { "abertura": 1, "parcial": 3, "fechamento": 6 },
+    "imagens": false,
     "enquete": { "diaSemana": 5, "hora": "10:00" }
   },
   "x": {
@@ -45,6 +46,7 @@
     "precos": { "post": 0.015, "post_com_link": 0.2, "leitura_post": 0.005, "leitura_usuario": 0.01, "midia": 0 },
     "iof": 0.035,
     "diarios": { "abertura": 1, "parcial": 3, "fechamento": 6 },
+    "imagens": false,
     "enquete": { "diaSemana": 5, "hora": "10:00" }
   }
 }

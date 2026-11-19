@@ -197,7 +197,7 @@ async function arte(data, n) {
 
 async function enviar({ texto, imagens }, data) {
   const midias = [];
-  for (const n of imagens.slice(0, 4)) {
+  for (const n of (CX.imagens === false ? [] : imagens.slice(0, 4))) {
     try { midias.push(await subirImagem(await arte(data, n))); } catch (e) { console.error(`x: sem arte ${n}: ${e.message}`); }
   }
   return [await postar(texto, { midias })];

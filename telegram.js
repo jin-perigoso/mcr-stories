@@ -150,7 +150,8 @@ async function arte(data, n) {
 async function enviar(chat, { texto, imagens }, data) {
   const html = { parse_mode: 'HTML' };
   const arqs = [];
-  for (const n of imagens) arqs.push(await arte(data, n).catch((e) => { console.error(`telegram: sem arte ${n}: ${e.message}`); return null; }));
+  // config.telegram.imagens = false: só texto (as artes 9:16 dos Stories ficam grandes demais no Telegram)
+  for (const n of (TG.imagens === false ? [] : imagens)) arqs.push(await arte(data, n).catch((e) => { console.error(`telegram: sem arte ${n}: ${e.message}`); return null; }));
   const fotos = arqs.filter(Boolean);
   const cabe = tamanhoVisivel(texto) <= 1024;
   const ids = [];
