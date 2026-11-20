@@ -10,15 +10,19 @@
   }
  },
  "perfil": {
-  "dia": "2026-11-19",
+  "dia": "2026-11-20",
   "usuario": "mcrupinvest",
   "seguidores": 0,
-  "posts": 8,
-  "em": "2026-11-19T12:09:46.948Z"
+  "posts": 10,
+  "em": "2026-11-20T03:00:15.672Z"
  },
  "seguidoresHistorico": [
   {
    "dia": "2026-11-19",
+   "n": 0
+  },
+  {
+   "dia": "2026-11-20",
    "n": 0
   }
  ]
