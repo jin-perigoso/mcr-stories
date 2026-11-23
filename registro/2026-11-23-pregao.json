@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-23",
+ "geradoEm": 1795469381050,
+ "altas": [
+  {
+   "cod": "MGLU3",
+   "nome": "Magazine Luiza",
+   "preco": 8.99,
+   "var": 9.63
+  },
+  {
+   "cod": "RADL3",
+   "nome": "Raia Drogasil",
+   "preco": 14.69,
+   "var": 7.07
+  },
+  {
+   "cod": "VAMO3",
+   "nome": "Vamos",
+   "preco": 2.6,
+   "var": 4.42
+  },
+  {
+   "cod": "DIRR3",
+   "nome": "Direcional",
+   "preco": 8.94,
+   "var": 2.29
+  },
+  {
+   "cod": "CSAN3",
+   "nome": "Cosan",
+   "preco": 3.14,
+   "var": 1.95
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 5.8,
+   "var": -5.84
+  },
+  {
+   "cod": "PETR3",
+   "nome": "Petrobras",
+   "preco": 47.02,
+   "var": -3.31
+  },
+  {
+   "cod": "PRIO3",
+   "nome": "PRIO",
+   "preco": 58.22,
+   "var": -3.29
+  },
+  {
+   "cod": "BRAV3",
+   "nome": "Brava Energia",
+   "preco": 12.41,
+   "var": -3.27
+  },
+  {
+   "cod": "EMBJ3",
+   "nome": "Embraer",
+   "preco": 106.96,
+   "var": -2.9
+  }
+ ],
+ "ibov": {
+  "pontos": 164796.05,
+  "var": -0.95
+ },
+ "dolar": {
+  "preco": 5.9303,
+  "var": -0.31
+ },
+ "conf": {
+  "fimPregao": 1795464000000,
+  "ibovHorario": 1795468306000,
+  "ibovData": "2026-11-23",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
