@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-24",
+ "geradoEm": 1795555764710,
+ "altas": [
+  {
+   "cod": "COGN3",
+   "nome": "Cogna",
+   "preco": 1.65,
+   "var": 5.77
+  },
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 6.1,
+   "var": 5.17
+  },
+  {
+   "cod": "FLRY3",
+   "nome": "Fleury",
+   "preco": 22.51,
+   "var": 3.59
+  },
+  {
+   "cod": "ASAI3",
+   "nome": "Assaí",
+   "preco": 9.65,
+   "var": 3.1
+  },
+  {
+   "cod": "CSAN3",
+   "nome": "Cosan",
+   "preco": 3.23,
+   "var": 2.87
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "CSNA3",
+   "nome": "CSN",
+   "preco": 3.24,
+   "var": -6.9
+  },
+  {
+   "cod": "POMO4",
+   "nome": "Marcopolo",
+   "preco": 3.37,
+   "var": -6.39
+  },
+  {
+   "cod": "NATU3",
+   "nome": "Natura",
+   "preco": 4.26,
+   "var": -6.37
+  },
+  {
+   "cod": "VALE3",
+   "nome": "Vale",
+   "preco": 55.19,
+   "var": -5.51
+  },
+  {
+   "cod": "BRAP4",
+   "nome": "Bradespar",
+   "preco": 15.76,
+   "var": -4.48
+  }
+ ],
+ "ibov": {
+  "pontos": 164089.81,
+  "var": -0.43
+ },
+ "dolar": {
+  "preco": 5.9058,
+  "var": -0.4
+ },
+ "conf": {
+  "fimPregao": 1795550400000,
+  "ibovHorario": 1795554811000,
+  "ibovData": "2026-11-24",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
