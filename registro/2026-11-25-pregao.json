@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-25",
+ "geradoEm": 1795642196796,
+ "altas": [
+  {
+   "cod": "NATU3",
+   "nome": "Natura",
+   "preco": 4.71,
+   "var": 10.56
+  },
+  {
+   "cod": "AZZA3",
+   "nome": "Azzas 2154",
+   "preco": 15.33,
+   "var": 8.11
+  },
+  {
+   "cod": "VAMO3",
+   "nome": "Vamos",
+   "preco": 2.78,
+   "var": 7.75
+  },
+  {
+   "cod": "CSNA3",
+   "nome": "CSN",
+   "preco": 3.45,
+   "var": 6.48
+  },
+  {
+   "cod": "MRVE3",
+   "nome": "MRV",
+   "preco": 4.62,
+   "var": 6.45
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "EMBJ3",
+   "nome": "Embraer",
+   "preco": 103.2,
+   "var": -4
+  },
+  {
+   "cod": "SANB11",
+   "nome": "Santander Brasil",
+   "preco": 27.37,
+   "var": -2.6
+  },
+  {
+   "cod": "ABEV3",
+   "nome": "Ambev",
+   "preco": 15.81,
+   "var": -1.8
+  },
+  {
+   "cod": "MBRF3",
+   "nome": "MBRF",
+   "preco": 18.01,
+   "var": -1.58
+  },
+  {
+   "cod": "VIVT3",
+   "nome": "Vivo",
+   "preco": 34.8,
+   "var": -1.42
+  }
+ ],
+ "ibov": {
+  "pontos": 166684.61,
+  "var": 1.58
+ },
+ "dolar": {
+  "preco": 5.8225,
+  "var": -1.2
+ },
+ "conf": {
+  "fimPregao": 1795636800000,
+  "ibovHorario": 1795641158000,
+  "ibovData": "2026-11-25",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
