@@ -1,5 +1,5 @@
 {
-  "quando": null,
+  "quando": "2026-11-25T18:00:00-03:00",
   "imagens": [
     "1.jpg",
     "2.jpg",
@@ -16,6 +16,5 @@
     "link": "https://mcrup-content.netlify.app/guia/13?o=direct",
     "dias": 7,
     "mensagem": "isca-dm.txt"
-  },
-  "_situacao": "Cancelado em 20/11 (feriado). Aguardando nova data: preencher quando para reagendar."
+  }
 }
