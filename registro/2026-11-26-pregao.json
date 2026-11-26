@@ -1,0 +1,59 @@
+{
+ "data": "2026-11-26",
+ "geradoEm": 1795728598052,
+ "altas": [
+  {
+   "cod": "MRVE3",
+   "nome": "MRV",
+   "preco": 5.33,
+   "var": 15.37
+  },
+  {
+   "cod": "RENT3",
+   "nome": "Localiza",
+   "preco": 33.77,
+   "var": 15.18
+  },
+  {
+   "cod": "RADL3",
+   "nome": "Raia Drogasil",
+   "preco": 17.46,
+   "var": 13.16
+  },
+  {
+   "cod": "BBAS3",
+   "nome": "Banco do Brasil",
+   "preco": 16.54,
+   "var": 12.59
+  },
+  {
+   "cod": "CSAN3",
+   "nome": "Cosan",
+   "preco": 3.84,
+   "var": 12.28
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "SUZB3",
+   "nome": "Suzano",
+   "preco": 54.87,
+   "var": -0.96
+  }
+ ],
+ "ibov": {
+  "pontos": 176799.84,
+  "var": 6.07
+ },
+ "dolar": {
+  "preco": 5.6508,
+  "var": -2.92
+ },
+ "conf": {
+  "fimPregao": 1795723200000,
+  "ibovHorario": 1795727510000,
+  "ibovData": "2026-11-26",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
