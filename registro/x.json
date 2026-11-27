@@ -60,5 +60,11 @@
    "dia": "2026-11-27",
    "n": 0
   }
- ]
+ ],
+ "enquetes": {
+  "2026-11-27": {
+   "id": "2126300140453732371",
+   "pergunta": "O que mais pesou no seu humor com o mercado nesta semana?"
+  }
+ }
 }
