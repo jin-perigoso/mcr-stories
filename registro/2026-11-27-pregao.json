@@ -1,0 +1,83 @@
+{
+ "data": "2026-11-27",
+ "geradoEm": 1795814948930,
+ "altas": [
+  {
+   "cod": "TEND3",
+   "nome": "Tenda",
+   "preco": 18.66,
+   "var": 13.02
+  },
+  {
+   "cod": "MRVE3",
+   "nome": "MRV",
+   "preco": 5.92,
+   "var": 11.07
+  },
+  {
+   "cod": "HAPV3",
+   "nome": "Hapvida",
+   "preco": 7.15,
+   "var": 10
+  },
+  {
+   "cod": "MGLU3",
+   "nome": "Magazine Luiza",
+   "preco": 10.59,
+   "var": 9.74
+  },
+  {
+   "cod": "VIVA3",
+   "nome": "Vivara",
+   "preco": 17.81,
+   "var": 7.68
+  }
+ ],
+ "baixas": [
+  {
+   "cod": "NATU3",
+   "nome": "Natura",
+   "preco": 4.86,
+   "var": -6.54
+  },
+  {
+   "cod": "SUZB3",
+   "nome": "Suzano",
+   "preco": 51.98,
+   "var": -5.27
+  },
+  {
+   "cod": "TIMS3",
+   "nome": "TIM",
+   "preco": 21.96,
+   "var": -4.48
+  },
+  {
+   "cod": "EMBJ3",
+   "nome": "Embraer",
+   "preco": 101.93,
+   "var": -3.88
+  },
+  {
+   "cod": "USIM5",
+   "nome": "Usiminas",
+   "preco": 4.96,
+   "var": -3.69
+  }
+ ],
+ "ibov": {
+  "pontos": 176573.34,
+  "var": -0.13
+ },
+ "dolar": {
+  "preco": 5.5577,
+  "var": -1.66
+ },
+ "conf": {
+  "fimPregao": 1795809600000,
+  "ibovHorario": 1795813924000,
+  "ibovData": "2026-11-27",
+  "acoes": 76,
+  "carteira": 76
+ }
+}
